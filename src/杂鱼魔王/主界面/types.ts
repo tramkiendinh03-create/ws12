@@ -5,7 +5,7 @@ export type MvuData = z.output<typeof Schema>;
 
 // 世界信息类型
 export interface WorldState {
-  time: string;           // 世界时间
+  time: string; // 世界时间
   currentLocation: string; // 当前地点
   currentInteractionTarget: string; // 当前交互目标
   demonRealmPower: {
@@ -18,24 +18,26 @@ export interface WorldState {
 export interface TargetCharacter {
   id: string;
   name: string;
-  title: string;       // 身份
+  title: string; // 身份
   race?: string;
-  level: string;       // 等级 e.g., "Lv. 95"
+  level: string; // 等级 e.g., "Lv. 95"
   currentStatus: string; // 当前状态
   affection: {
     value: number;
     max: number;
     description: string; // 阶段
   };
-  corruption: {        // 迷堕度
+  corruption: {
+    // 迷堕度
     value: number;
     max: number;
     description: string; // 阶段
   };
-  traits: {            // 特征标签
-    core: string;      // 核心
-    weakness: string;  // 弱点
-    special: string;   // 特质
+  traits: {
+    // 特征标签
+    core: string; // 核心
+    weakness: string; // 弱点
+    special: string; // 特质
     xpTendency: string; // XP倾向
   };
   avatarUrl?: string;
@@ -44,28 +46,29 @@ export interface TargetCharacter {
 // 成就类型
 export interface Achievement {
   id: string;
-  title: string;       // 名称
+  title: string; // 名称
   description: string; // 描述
-  reward: string;      // 奖励
-  timestamp: number;   // 获取时间
+  reward: string; // 奖励
+  timestamp: number; // 获取时间
 }
 
 // 玩家状态类型
 export interface PlayerStats {
-  name: string;        // 姓名
+  name: string; // 姓名
   avatarUrl?: string;
-  race: string;        // 当前形态
+  race: string; // 当前形态
   currentForm: string; // 当前形态
-  level: number;       // 等级
-  exp: number;         // 经验值
+  level: number; // 等级
+  exp: number; // 经验值
   maxExp: number;
   mana: {
     current: number;
     max: number;
   };
-  currentRole: string;     // 当前扮演
+  currentRole: string; // 当前扮演
   currentAppearance: string; // 外观气质
-  equipment: {         // 装备栏
+  equipment: {
+    // 装备栏
     上装: string;
     下装: string;
     内衣: string;
@@ -74,9 +77,10 @@ export interface PlayerStats {
     饰品: string;
   };
   items: Record<string, string>; // 道具栏，值为描述字符串如"1个（灵魂绑定，不可丢弃）"
-  skills: {            // 核心能力
+  skills: {
+    // 核心能力
     passive: Record<string, string>; // 被动
-    active: Record<string, string>;  // 主动
+    active: Record<string, string>; // 主动
   };
 }
 
@@ -156,17 +160,17 @@ export function transformMvuToAchievements(data: MvuData): Achievement[] {
 
 // 旧版枚举保持兼容
 export enum AffectionLevel {
-  COLD = "冷淡警惕",
-  NEUTRAL = "平淡如水",
-  INTERESTED = "暧昧倾心",
-  DEVOTED = "完全信赖与爱"
+  COLD = '冷淡警惕',
+  NEUTRAL = '平淡如水',
+  INTERESTED = '暧昧倾心',
+  DEVOTED = '完全信赖与爱',
 }
 
 export enum CorruptionLevel {
-  PURE = "纯净",
-  TAINTED = "动摇",
-  FALLEN = "半魔化/理智边缘",
-  CONVERTED = "完全转化"
+  PURE = '纯净',
+  TAINTED = '动摇',
+  FALLEN = '半魔化/理智边缘',
+  CONVERTED = '完全转化',
 }
 
 export interface ChatMessage {

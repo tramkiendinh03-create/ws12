@@ -9,7 +9,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap');
 
 // 基础样式
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -90,12 +91,7 @@ html, body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      transparent 100%
-    );
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
     transition: left 0.5s ease;
   }
 

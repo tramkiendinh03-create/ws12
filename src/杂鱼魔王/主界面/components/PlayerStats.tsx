@@ -27,17 +27,16 @@ export const PlayerStats: React.FC<Props> = ({ stats }) => {
   const passiveSkills = Object.entries(stats.skills.passive).map(([name, desc]) => ({ name, desc }));
   const activeSkills = Object.entries(stats.skills.active).map(([name, desc]) => ({ name, desc }));
 
-  const TabButton = ({ id, icon, label }: { id: typeof activeTab, icon: React.ReactNode, label: string }) => (
+  const TabButton = ({ id, icon, label }: { id: typeof activeTab; icon: React.ReactNode; label: string }) => (
     <button
       onClick={() => setActiveTab(id)}
-      className={`font-display relative flex flex-1 flex-col items-center justify-center overflow-hidden py-3 text-xs tracking-wider transition-all duration-300 ${activeTab === id ? 'text-crimson-400 font-bold' : 'text-gray-400 hover:text-gray-200'
-        }`}
+      className={`font-display relative flex flex-1 flex-col items-center justify-center overflow-hidden py-3 text-xs tracking-wider transition-all duration-300 ${
+        activeTab === id ? 'text-crimson-400 font-bold' : 'text-gray-400 hover:text-gray-200'
+      }`}
     >
       <div className="relative z-10 mb-1">{icon}</div>
       <span className="relative z-10">{label}</span>
-      {activeTab === id && (
-        <div className="from-crimson-900/40 absolute inset-0 bg-gradient-to-t to-transparent" />
-      )}
+      {activeTab === id && <div className="from-crimson-900/40 absolute inset-0 bg-gradient-to-t to-transparent" />}
       {activeTab === id && (
         <div className="bg-crimson-500 absolute right-1/4 bottom-0 left-1/4 h-0.5 rounded-full shadow-[0_0_8px_rgba(160,26,53,0.8)]"></div>
       )}
@@ -48,7 +47,6 @@ export const PlayerStats: React.FC<Props> = ({ stats }) => {
     <GlassPanel className="relative flex h-full flex-col" variant="dark">
       {/* Header Profile with Avatar Frame */}
       <div className="relative mb-6 flex shrink-0 items-center gap-4 border-b border-white/10 pb-4">
-
         {/* Avatar Section */}
         <div
           className="group relative shrink-0 cursor-pointer"
@@ -85,7 +83,9 @@ export const PlayerStats: React.FC<Props> = ({ stats }) => {
             {stats.name}
           </h2>
           <div className="mt-1 flex items-center gap-2">
-            <span className="rounded border border-white/20 bg-white/5 px-1.5 text-[10px] text-gray-400">{stats.race}</span>
+            <span className="rounded border border-white/20 bg-white/5 px-1.5 text-[10px] text-gray-400">
+              {stats.race}
+            </span>
             <span className="text-crimson-300 truncate font-serif text-xs italic">{stats.currentForm}</span>
           </div>
         </div>
@@ -106,7 +106,9 @@ export const PlayerStats: React.FC<Props> = ({ stats }) => {
         <div>
           <div className="mb-1 flex justify-between font-mono text-[10px] text-gray-400">
             <span>经验值</span>
-            <span className="text-gray-300">{stats.exp} / {stats.maxExp}</span>
+            <span className="text-gray-300">
+              {stats.exp} / {stats.maxExp}
+            </span>
           </div>
           <div className="bg-void-950 h-1 w-full overflow-hidden rounded-full border border-white/10">
             <div
@@ -121,8 +123,12 @@ export const PlayerStats: React.FC<Props> = ({ stats }) => {
         {/* Mana */}
         <div>
           <div className="text-magic-purple mb-1 flex justify-between font-mono text-[10px]">
-            <span className="flex items-center gap-1"><Zap size={10} /> 魔能</span>
-            <span className="text-purple-200">{stats.mana.current} / {stats.mana.max}</span>
+            <span className="flex items-center gap-1">
+              <Zap size={10} /> 魔能
+            </span>
+            <span className="text-purple-200">
+              {stats.mana.current} / {stats.mana.max}
+            </span>
           </div>
           <div className="bg-void-950 h-1.5 w-full overflow-hidden rounded-full border border-purple-500/30 shadow-inner">
             <div
@@ -194,7 +200,10 @@ export const PlayerStats: React.FC<Props> = ({ stats }) => {
               {equipmentList.length > 0 ? (
                 <ul className="grid grid-cols-1 gap-2">
                   {equipmentList.map((item, i) => (
-                    <li key={i} className="flex items-center gap-2 rounded border border-purple-500/20 bg-purple-900/20 px-3 py-2 text-xs text-purple-100">
+                    <li
+                      key={i}
+                      className="flex items-center gap-2 rounded border border-purple-500/20 bg-purple-900/20 px-3 py-2 text-xs text-purple-100"
+                    >
                       <div className="h-1.5 w-1.5 rounded-full bg-purple-400 shadow-[0_0_5px_rgba(168,85,247,0.8)]"></div>
                       {item}
                     </li>
@@ -209,7 +218,10 @@ export const PlayerStats: React.FC<Props> = ({ stats }) => {
               {itemsList.length > 0 ? (
                 <ul className="space-y-1">
                   {itemsList.map((item, i) => (
-                    <li key={i} className="rounded border-l border-transparent px-2 py-1.5 text-xs text-gray-300 transition-colors hover:border-gray-500 hover:bg-white/5">
+                    <li
+                      key={i}
+                      className="rounded border-l border-transparent px-2 py-1.5 text-xs text-gray-300 transition-colors hover:border-gray-500 hover:bg-white/5"
+                    >
                       {item}
                     </li>
                   ))}
@@ -253,7 +265,10 @@ export const PlayerStats: React.FC<Props> = ({ stats }) => {
                       className="group from-crimson-900/30 text-crimson-100 border-crimson-500/30 flex cursor-help items-center justify-between rounded border bg-gradient-to-r to-transparent p-2.5 text-xs transition-colors hover:border-crimson-400/50 hover:bg-crimson-900/40"
                     >
                       <span>{skill.name}</span>
-                      <Info size={12} className="text-crimson-400 opacity-50 transition-opacity group-hover:opacity-100" />
+                      <Info
+                        size={12}
+                        className="text-crimson-400 opacity-50 transition-opacity group-hover:opacity-100"
+                      />
                     </div>
                   ))}
                 </div>

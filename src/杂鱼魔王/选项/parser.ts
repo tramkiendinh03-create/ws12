@@ -13,7 +13,10 @@ import type { ParsedOption } from './types';
  */
 export function parseOptions(rawText: string): ParsedOption[] {
   const options: ParsedOption[] = [];
-  const lines = rawText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+  const lines = rawText
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.length > 0);
 
   for (const line of lines) {
     // 尝试匹配 X. 【标题】 格式
@@ -123,13 +126,16 @@ export function getOptionTheme(id: string): {
   glow: string;
   icon: string;
 } {
-  const themes: Record<string, {
-    bg: string;
-    border: string;
-    text: string;
-    glow: string;
-    icon: string;
-  }> = {
+  const themes: Record<
+    string,
+    {
+      bg: string;
+      border: string;
+      text: string;
+      glow: string;
+      icon: string;
+    }
+  > = {
     A: {
       bg: 'from-pink-900/30 to-crimson-900/20',
       border: 'border-pink-500/40',

@@ -4,11 +4,7 @@ import React from 'react';
 import { OptionCard } from './OptionCard';
 import type { OptionsPanelProps, ParsedOption } from './types';
 
-export const OptionsPanel: React.FC<OptionsPanelProps> = ({
-  options,
-  onSelect,
-  disabled = false,
-}) => {
+export const OptionsPanel: React.FC<OptionsPanelProps> = ({ options, onSelect, disabled = false }) => {
   const handleSelect = (option: ParsedOption) => {
     if (disabled) return;
 
@@ -27,13 +23,8 @@ export const OptionsPanel: React.FC<OptionsPanelProps> = ({
 
   return (
     <div className="options-container">
-      {options.map((option) => (
-        <OptionCard
-          key={option.id}
-          option={option}
-          onSelect={handleSelect}
-          disabled={disabled}
-        />
+      {options.map(option => (
+        <OptionCard key={option.id} option={option} onSelect={handleSelect} disabled={disabled} />
       ))}
     </div>
   );

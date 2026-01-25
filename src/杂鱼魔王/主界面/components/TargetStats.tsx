@@ -65,20 +65,25 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
     <GlassPanel className="flex h-full min-h-0 flex-col" variant="crimson" title="猎物名单" icon={<Users size={16} />}>
       {/* Changed to Grid for better density on larger screens */}
       <div className="custom-scrollbar grid flex-1 grid-cols-1 content-start gap-3 overflow-y-auto p-2 pr-1 md:grid-cols-2">
-        {targets.map((target) => {
+        {targets.map(target => {
           return (
-            <div key={target.id} className="group relative flex flex-col transition-all duration-300 hover:scale-[1.02]">
+            <div
+              key={target.id}
+              className="group relative flex flex-col transition-all duration-300 hover:scale-[1.02]"
+            >
               {/* Background Card Style */}
               <div className="bg-void-950/60 absolute inset-0 rounded-xl border border-white/10 shadow-lg transition-colors group-hover:border-crimson-500/40"></div>
 
               {/* Inner Content - Responsive Row Layout */}
               <div className="relative flex flex-row items-center gap-3 p-2.5">
-
                 {/* Avatar Column - 可点击展开 */}
                 <div className="relative shrink-0">
                   <div
-                    className={`relative h-14 w-14 overflow-hidden rounded-full bg-gradient-to-b from-gray-600 to-black p-[2px] shadow-md transition-all duration-300 ${target.avatarUrl ? 'cursor-pointer hover:ring-2 hover:ring-crimson-500/50 hover:shadow-lg hover:shadow-crimson-500/20' : ''
-                      }`}
+                    className={`relative h-14 w-14 overflow-hidden rounded-full bg-gradient-to-b from-gray-600 to-black p-[2px] shadow-md transition-all duration-300 ${
+                      target.avatarUrl
+                        ? 'cursor-pointer hover:ring-2 hover:ring-crimson-500/50 hover:shadow-lg hover:shadow-crimson-500/20'
+                        : ''
+                    }`}
                     onClick={() => target.avatarUrl && openImageModal(target.avatarUrl, target.name)}
                     title={target.avatarUrl ? '点击查看大图' : ''}
                   >
@@ -132,7 +137,9 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
                           style={{ width: `${(target.affection.value / target.affection.max) * 100}%` }}
                         />
                       </div>
-                      <span className="w-5 text-right font-mono text-[9px] leading-none text-pink-300">{target.affection.value}</span>
+                      <span className="w-5 text-right font-mono text-[9px] leading-none text-pink-300">
+                        {target.affection.value}
+                      </span>
                     </div>
 
                     {/* Corruption (迷堕度) */}
@@ -144,7 +151,9 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
                           style={{ width: `${(target.corruption.value / target.corruption.max) * 100}%` }}
                         />
                       </div>
-                      <span className="w-5 text-right font-mono text-[9px] leading-none text-purple-300">{target.corruption.value}</span>
+                      <span className="w-5 text-right font-mono text-[9px] leading-none text-purple-300">
+                        {target.corruption.value}
+                      </span>
                     </div>
                   </div>
 
@@ -173,7 +182,7 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
                 </div>
               </div>
             </div>
-          )
+          );
         })}
         {targets.length === 0 && (
           <div className="col-span-full text-center py-8 text-gray-500">
@@ -200,16 +209,18 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
       <div className="absolute top-12 -right-8 z-0 hidden flex-col gap-2 md:flex">
         {[
           { id: 'player', icon: <User size={16} />, label: '主角', color: 'border-purple-500/40 text-purple-300' },
-          { id: 'targets', icon: <Users size={16} />, label: '猎物', color: 'border-crimson-500/40 text-crimson-300' }
-        ].map((tab) => (
+          { id: 'targets', icon: <Users size={16} />, label: '猎物', color: 'border-crimson-500/40 text-crimson-300' },
+        ].map(tab => (
           <button
             key={tab.id}
             onClick={() => setActivePage(tab.id as Page)}
             className={`
                         relative flex h-14 w-10 items-center justify-center rounded-r-md border-y border-r shadow-xl transition-all duration-300
-                        ${activePage === tab.id
-                ? `bg-void-900 ${tab.color} translate-x-0`
-                : 'bg-void-950 -translate-x-2 border-white/10 text-gray-500 hover:-translate-x-1 hover:text-gray-300'}
+                        ${
+                          activePage === tab.id
+                            ? `bg-void-900 ${tab.color} translate-x-0`
+                            : 'bg-void-950 -translate-x-2 border-white/10 text-gray-500 hover:-translate-x-1 hover:text-gray-300'
+                        }
                     `}
           >
             <div className="bg-noise pointer-events-none absolute inset-0 opacity-20"></div>
@@ -220,7 +231,6 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
 
       {/* Main Book Body */}
       <div className="bg-void-900/90 relative flex flex-1 flex-col overflow-hidden rounded-xl border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)] backdrop-blur-xl">
-
         {/* Corner Ornaments (CSS Graphics) */}
         <div className="pointer-events-none absolute top-0 left-0 z-20 h-10 w-10 rounded-tl-xl border-t-2 border-l-2 border-white/10"></div>
         <div className="pointer-events-none absolute right-0 bottom-0 z-20 h-10 w-10 rounded-br-xl border-r-2 border-b-2 border-white/10"></div>
@@ -252,12 +262,11 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
             </button>
           )}
         </div>
-
       </div>
 
       {/* Mobile Tabs (Bottom) */}
       <div className="mt-3 flex justify-between rounded-full border border-white/10 bg-black/40 p-1 backdrop-blur-md md:hidden">
-        {pages.map((page) => {
+        {pages.map(page => {
           const icons = { player: <User size={14} />, targets: <Users size={14} /> };
           const labels = { player: '主角', targets: '猎物' };
           const isActive = activePage === page;
@@ -267,15 +276,17 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
               onClick={() => setActivePage(page)}
               className={`
                         flex flex-1 items-center justify-center gap-2 rounded-full py-2 text-xs font-bold transition-all duration-300
-                        ${isActive
-                  ? 'bg-crimson-900/60 text-crimson-200 shadow-lg'
-                  : 'text-gray-500 hover:text-gray-300'}
+                        ${
+                          isActive
+                            ? 'bg-crimson-900/60 text-crimson-200 shadow-lg'
+                            : 'text-gray-500 hover:text-gray-300'
+                        }
                     `}
             >
               {icons[page]}
               <span>{labels[page]}</span>
             </button>
-          )
+          );
         })}
       </div>
 

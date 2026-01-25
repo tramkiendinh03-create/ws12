@@ -7,7 +7,7 @@ import { ChatMessage } from '../types';
 export async function generateGameResponse(
   _history: ChatMessage[],
   userInput: string,
-  _gameState: unknown
+  _gameState: unknown,
 ): Promise<string> {
   // 占位实现：使用酒馆助手的 generate 接口
   try {

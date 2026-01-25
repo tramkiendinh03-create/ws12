@@ -34,7 +34,9 @@ export const WorldStatusBar: React.FC<Props> = ({ world, onMenuToggle, isMobileM
             <Activity size={14} className="text-crimson-500 shrink-0" />
             <span className="hidden lg:inline">魔族国力:</span>
             <span className="text-crimson-400 font-bold">{world.demonRealmPower.value}</span>
-            <span className="max-w-[80px] truncate text-xs text-gray-500 lg:max-w-none">({world.demonRealmPower.description})</span>
+            <span className="max-w-[80px] truncate text-xs text-gray-500 lg:max-w-none">
+              ({world.demonRealmPower.description})
+            </span>
           </div>
         </div>
 
@@ -76,9 +78,7 @@ export const WorldStatusBar: React.FC<Props> = ({ world, onMenuToggle, isMobileM
                   <MapPin size={12} className="text-purple-400" />
                   <span className="text-[10px] font-bold tracking-widest text-purple-300 uppercase">当前地点</span>
                 </div>
-                <p className="text-xs leading-relaxed text-gray-200 md:text-sm">
-                  {world.currentLocation}
-                </p>
+                <p className="text-xs leading-relaxed text-gray-200 md:text-sm">{world.currentLocation}</p>
               </div>
               {/* 装饰性光晕 */}
               <div className="pointer-events-none absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-purple-500/10 blur-xl"></div>
@@ -94,9 +94,7 @@ export const WorldStatusBar: React.FC<Props> = ({ world, onMenuToggle, isMobileM
                   <Target size={12} className="text-crimson-400" />
                   <span className="text-crimson-300 text-[10px] font-bold tracking-widest uppercase">交互目标</span>
                 </div>
-                <p className="text-xs leading-relaxed text-gray-200 md:text-sm">
-                  {world.currentInteractionTarget}
-                </p>
+                <p className="text-xs leading-relaxed text-gray-200 md:text-sm">{world.currentInteractionTarget}</p>
               </div>
               {/* 装饰性光晕 */}
               <div className="bg-crimson-500/10 pointer-events-none absolute -right-4 -bottom-4 h-16 w-16 rounded-full blur-xl"></div>

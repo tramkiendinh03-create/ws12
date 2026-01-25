@@ -38,7 +38,7 @@ export const ImageModal: React.FC<ImageModalProps> = ({ isOpen, imageUrl, altTex
       {/* 图片容器 */}
       <div
         className="relative max-h-[90vh] max-w-[90vw] overflow-hidden rounded-xl shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         {/* 发光效果 */}
         <div className="from-crimson-500/20 absolute inset-0 -z-10 bg-gradient-to-br to-purple-500/20 blur-3xl"></div>
@@ -59,9 +59,7 @@ export const ImageModal: React.FC<ImageModalProps> = ({ isOpen, imageUrl, altTex
       </div>
 
       {/* 点击关闭提示 */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-sm text-gray-400">
-        点击任意位置关闭
-      </div>
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-sm text-gray-400">点击任意位置关闭</div>
     </div>
   );
 };

@@ -174,10 +174,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="option-beautifier w-full">
-      <OptionsPanel
-        options={options}
-        onSelect={handleSelect}
-      />
+      <OptionsPanel options={options} onSelect={handleSelect} />
     </div>
   );
 };
