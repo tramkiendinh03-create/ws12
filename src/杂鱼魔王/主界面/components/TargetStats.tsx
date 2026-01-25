@@ -26,9 +26,12 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
   }, []);
 
   // 检查图片是否可用（未加载失败）
-  const isImageAvailable = useCallback((url: string | undefined): url is string => {
-    return !!url && !failedImages.has(url);
-  }, [failedImages]);
+  const isImageAvailable = useCallback(
+    (url: string | undefined): url is string => {
+      return !!url && !failedImages.has(url);
+    },
+    [failedImages],
+  );
 
   // --- Image Modal Logic ---
   const openImageModal = (url: string, name: string) => {
@@ -94,10 +97,11 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
                     const hasValidImage = isImageAvailable(target.avatarUrl);
                     return (
                       <div
-                        className={`relative h-14 w-14 overflow-hidden rounded-full bg-gradient-to-b from-gray-600 to-black p-[2px] shadow-md transition-all duration-300 ${hasValidImage
+                        className={`relative h-14 w-14 overflow-hidden rounded-full bg-gradient-to-b from-gray-600 to-black p-[2px] shadow-md transition-all duration-300 ${
+                          hasValidImage
                             ? 'hover:ring-crimson-500/50 hover:shadow-crimson-500/20 hover:shadow-lg hover:ring-2 cursor-pointer'
                             : ''
-                          } ${target.isCorrupted ? 'ring-2 ring-purple-500/60' : ''}`}
+                        } ${target.isCorrupted ? 'ring-2 ring-purple-500/60' : ''}`}
                         onClick={() => hasValidImage && openImageModal(target.avatarUrl!, target.name)}
                         title={hasValidImage ? '点击查看大图' : ''}
                       >
@@ -106,8 +110,9 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
                             <img
                               src={target.avatarUrl}
                               alt={target.name}
-                              className={`h-full w-full rounded-full object-cover transition-all duration-500 group-hover:grayscale-0 ${target.isCorrupted ? 'grayscale-0' : 'grayscale-[10%]'
-                                }`}
+                              className={`h-full w-full rounded-full object-cover transition-all duration-500 group-hover:grayscale-0 ${
+                                target.isCorrupted ? 'grayscale-0' : 'grayscale-[10%]'
+                              }`}
                               onError={() => handleImageError(target.avatarUrl!)}
                             />
                             {/* 放大图标提示 */}
@@ -122,10 +127,13 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
                             )}
                           </>
                         ) : (
-                          <div className={`flex h-full w-full items-center justify-center rounded-full ${target.isCorrupted
-                              ? 'bg-gradient-to-br from-purple-600 to-black'
-                              : 'from-crimson-600 bg-gradient-to-br to-purple-600'
-                            }`}>
+                          <div
+                            className={`flex h-full w-full items-center justify-center rounded-full ${
+                              target.isCorrupted
+                                ? 'bg-gradient-to-br from-purple-600 to-black'
+                                : 'from-crimson-600 bg-gradient-to-br to-purple-600'
+                            }`}
+                          >
                             <User size={20} className="text-white/80" />
                             {/* 恶堕标识 */}
                             {target.isCorrupted && (
@@ -249,10 +257,11 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
             onClick={() => setActivePage(tab.id as Page)}
             className={`
                         relative flex h-14 w-10 items-center justify-center rounded-r-md border-y border-r shadow-xl transition-all duration-300
-                        ${activePage === tab.id
-                ? `bg-void-900 ${tab.color} translate-x-0`
-                : 'bg-void-950 -translate-x-2 border-white/10 text-gray-500 hover:-translate-x-1 hover:text-gray-300'
-              }
+                        ${
+                          activePage === tab.id
+                            ? `bg-void-900 ${tab.color} translate-x-0`
+                            : 'bg-void-950 -translate-x-2 border-white/10 text-gray-500 hover:-translate-x-1 hover:text-gray-300'
+                        }
                     `}
           >
             <div className="bg-noise pointer-events-none absolute inset-0 opacity-20"></div>
@@ -308,10 +317,11 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
               onClick={() => setActivePage(page)}
               className={`
                         flex flex-1 items-center justify-center gap-2 rounded-full py-2 text-xs font-bold transition-all duration-300
-                        ${isActive
-                  ? 'bg-crimson-900/60 text-crimson-200 shadow-lg'
-                  : 'text-gray-500 hover:text-gray-300'
-                }
+                        ${
+                          isActive
+                            ? 'bg-crimson-900/60 text-crimson-200 shadow-lg'
+                            : 'text-gray-500 hover:text-gray-300'
+                        }
                     `}
             >
               {icons[page]}
