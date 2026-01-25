@@ -1,0 +1,141 @@
+@use "sass:color";
+@use 'tailwindcss';
+
+// Custom Fonts
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Noto+Serif+SC:wght@300;500;700&family=Inter:wght@300;400;600&display=swap');
+
+// Theme Colors
+$void-950: #1f1a29;
+$void-900: #2d2438;
+$void-800: #3e324d;
+$crimson-500: #c93a5b;
+$crimson-900: #6b1224;
+$gold-400: #ffe580;
+$gold-600: #e6c200;
+$magic-purple: #d6bbf5;
+
+// Base Styles
+body {
+  background-color: $void-950;
+  color: #e2e8f0;
+  font-family: 'Inter', sans-serif;
+}
+
+// Custom Scrollbar
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, $crimson-900, $crimson-500);
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  &:hover {
+    background: $crimson-500;
+  }
+}
+
+// Glass Shine Effect
+.glass-shine {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1) 50%, transparent);
+    transform: skewX(-25deg);
+    animation: shine 6s infinite;
+  }
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  20% { left: 200%; }
+  100% { left: 200%; }
+}
+
+// Custom Animations
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 5px rgba(160, 26, 53, 0.2); }
+  100% { box-shadow: 0 0 20px rgba(160, 26, 53, 0.6), 0 0 10px rgba(160, 26, 53, 0.4); }
+}
+
+.animate-pulse-slow {
+  animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+// Utility Classes
+.font-serif {
+  font-family: 'Noto Serif SC', serif;
+}
+
+.font-display {
+  font-family: 'Cinzel', serif;
+}
+
+.font-sans {
+  font-family: 'Inter', sans-serif;
+}
+
+// Theme Color Classes
+.bg-void-950 { background-color: $void-950; }
+.bg-void-900 { background-color: $void-900; }
+.bg-void-800 { background-color: $void-800; }
+.text-crimson-500 { color: $crimson-500; }
+.text-crimson-400 { color: color.adjust($crimson-500, $lightness: 10%); }
+.text-crimson-300 { color: color.adjust($crimson-500, $lightness: 20%); }
+.text-crimson-200 { color: color.adjust($crimson-500, $lightness: 30%); }
+.bg-crimson-500 { background-color: $crimson-500; }
+.bg-crimson-900 { background-color: $crimson-900; }
+.border-crimson-500 { border-color: $crimson-500; }
+.text-gold-400 { color: $gold-400; }
+.text-gold-500 { color: $gold-600; }
+.text-magic-purple { color: $magic-purple; }
+
+// Noise Background
+.bg-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+// Custom Scrollbar Class
+.custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+}

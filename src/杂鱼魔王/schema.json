@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "世界信息": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "世界时间": {
+          "default": "第1天 初始之夜",
+          "type": "string"
+        },
+        "当前地点": {
+          "default": "魔王寝宫（王座后）",
+          "type": "string"
+        },
+        "当前交互目标": {
+          "default": "未知目标（床上）",
+          "type": "string"
+        },
+        "魔族国力": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "数值": {
+              "default": 5,
+              "type": "number"
+            },
+            "描述": {
+              "default": "沉寂（仅剩断壁残垣，等待复苏）",
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "NPC名册": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "description": "NPC名字"
+      },
+      "additionalProperties": {
+        "default": {},
+        "type": "object",
+        "properties": {
+          "身份": {
+            "type": "string"
+          },
+          "等级": {
+            "default": "Lv. 1",
+            "type": "string"
+          },
+          "当前状态": {
+            "default": "正常",
+            "type": "string"
+          },
+          "头像": {
+            "type": "string"
+          },
+          "好感度": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "数值": {
+                "type": "number"
+              },
+              "最大值": {
+                "default": 100,
+                "type": "number"
+              },
+              "阶段": {
+                "default": "冷淡警惕",
+                "type": "string"
+              }
+            }
+          },
+          "恶堕度": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "数值": {
+                "type": "number"
+              },
+              "最大值": {
+                "default": 100,
+                "type": "number"
+              },
+              "阶段": {
+                "default": "纯净",
+                "type": "string"
+              }
+            }
+          },
+          "特征标签": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "核心": {
+                "type": "string"
+              },
+              "弱点": {
+                "type": "string"
+              },
+              "特质": {
+                "type": "string"
+              },
+              "XP倾向": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "主角状态": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "基础信息": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "姓名": {
+              "default": "莉莉娜",
+              "type": "string"
+            },
+            "当前形态": {
+              "default": "魅魔（幼体/未完全觉醒）",
+              "type": "string"
+            },
+            "等级": {
+              "default": 1,
+              "type": "number"
+            },
+            "经验值": {
+              "type": "number"
+            },
+            "金币": {
+              "type": "number"
+            },
+            "魔能": {
+              "default": {},
+              "type": "object",
+              "properties": {
+                "当前": {
+                  "default": 100,
+                  "type": "number"
+                },
+                "最大": {
+                  "default": 100,
+                  "type": "number"
+                }
+              }
+            },
+            "当前扮演": {
+              "default": "常态_可爱诱受",
+              "type": "string"
+            },
+            "外观气质": {
+              "default": "仿佛精致人偶般的白发红瞳萝莉，眼神纯真懵懂，却散发着原始的魅惑气息",
+              "type": "string"
+            }
+          }
+        },
+        "装备栏": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "上装": {
+              "type": "string"
+            },
+            "下装": {
+              "type": "string"
+            },
+            "内衣": {
+              "type": "string"
+            },
+            "袜子": {
+              "type": "string"
+            },
+            "鞋子": {
+              "type": "string"
+            },
+            "饰品": {
+              "type": "string"
+            }
+          }
+        },
+        "道具栏": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "description": "道具名"
+          },
+          "additionalProperties": {
+            "type": "string",
+            "description": "道具描述，如\"1个（灵魂绑定，不可丢弃）\""
+          }
+        },
+        "核心能力": {
+          "default": {},
+          "type": "object",
+          "properties": {
+            "被动": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string",
+                "description": "技能名"
+              },
+              "additionalProperties": {
+                "type": "string",
+                "description": "技能描述"
+              }
+            },
+            "主动": {
+              "default": {},
+              "type": "object",
+              "propertyNames": {
+                "type": "string",
+                "description": "技能名"
+              },
+              "additionalProperties": {
+                "type": "string",
+                "description": "技能描述"
+              }
+            }
+          }
+        },
+        "最近成就": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "名称": {
+                "type": "string"
+              },
+              "描述": {
+                "type": "string"
+              },
+              "奖励": {
+                "type": "string"
+              },
+              "获取时间": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "名称",
+              "描述",
+              "奖励",
+              "获取时间"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
