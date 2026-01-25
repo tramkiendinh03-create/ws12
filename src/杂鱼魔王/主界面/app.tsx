@@ -6,14 +6,14 @@ import { useGameState } from './hooks/useMvuData';
 
 const App: React.FC = () => {
   // 从 MVU 变量获取游戏状态
-  const { world, player, targets, loading, error } = useGameState();
+  const { world, player, targets, loading, error, deleteNpc } = useGameState();
 
   // 加载中显示
   if (loading) {
     return (
       <div className="bg-void-950 flex h-[1200px] w-full items-center justify-center">
         <div className="text-center">
-          <div className="mb-4 h-8 w-8 animate-spin rounded-full border-2 border-purple-500 border-t-transparent mx-auto"></div>
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-2 border-purple-500 border-t-transparent"></div>
           <p className="text-gray-400">正在加载变量数据...</p>
         </div>
       </div>
@@ -29,7 +29,7 @@ const App: React.FC = () => {
     <div className="bg-void-950 relative flex h-[1200px] w-full flex-col overflow-hidden font-sans text-gray-200 selection:bg-crimson-500/30 selection:text-white">
       {/* 调试信息 - 仅在开发时显示 */}
       {error && (
-        <div className="absolute top-0 left-0 z-50 bg-red-900/80 text-red-200 text-xs px-2 py-1 rounded-br">
+        <div className="absolute top-0 left-0 z-50 rounded-br bg-red-900/80 px-2 py-1 text-xs text-red-200">
           变量解析错误: {error.message}
         </div>
       )}
@@ -57,11 +57,11 @@ const App: React.FC = () => {
       {/* Main Container - Reverted to max-w-4xl for compact/flat look */}
       <div className="relative z-10 container mx-auto flex h-full max-w-4xl flex-col p-3 md:p-4">
         {/* Top Status Bar */}
-        <WorldStatusBar world={displayWorld} onMenuToggle={() => {}} isMobileMenuOpen={false} />
+        <WorldStatusBar world={displayWorld} onMenuToggle={() => { }} isMobileMenuOpen={false} />
 
         {/* Content Area (Stats Book) */}
         <div className="perspective-1000 mt-3 min-h-0 flex-1">
-          <TargetStats player={displayPlayer} targets={displayTargets} />
+          <TargetStats player={displayPlayer} targets={displayTargets} onDeleteNpc={deleteNpc} />
         </div>
       </div>
     </div>

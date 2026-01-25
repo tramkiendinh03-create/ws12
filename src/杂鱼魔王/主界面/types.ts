@@ -47,39 +47,86 @@ export interface TargetCharacter {
 // CDN 图床基础 URL
 const CDN_BASE_URL = 'https://cdn.jsdelivr.net/gh/tramkiendinh03-create/ws12@main/llmw';
 
-// 可用的 NPC 图片列表（用于检测图片是否存在）
-const AVAILABLE_NPC_IMAGES = [
-  '艾莉西亚',
-  '奥菲莉亚',
-  '凤漓',
-  '卡蜜拉',
-  '莉莉丝',
-  '露娜',
-  '罗莎琳德',
-  '清虚子',
-  '索菲亚',
-  '特蕾莎',
-  '维罗妮卡',
-  '亚力克西斯',
-  '伊芙琳',
-  '玉藻前',
-];
+// NPC 名字到图片文件名的映射（处理角色卡中的全名与图片文件名不一致的情况）
+// 例如：角色卡中叫"莉莉丝·暗夜"，但图片文件名是"莉莉丝-原.png"
+const NPC_NAME_MAPPING: Record<string, string> = {
+  '莉莉丝·暗夜': '莉莉丝',
+  '卡蜜拉·永夜': '卡蜜拉',
+  '艾莉西亚·晨曦': '艾莉西亚',
+  '奥菲莉亚·星辉': '奥菲莉亚',
+  '露娜·月影': '露娜',
+  '罗莎琳德·玫瑰': '罗莎琳德',
+  '索菲亚·智慧': '索菲亚',
+  '特蕾莎·圣光': '特蕾莎',
+  '维罗妮卡·毒藤': '维罗妮卡',
+  '清虚子': '清虚子',
+  '凤漓': '凤漓',
+  '伊芙琳': '伊芙琳',
+};
+
+// 可用的 NPC 图片配置（基于 llmw 文件夹中的实际图片）
+// 格式：图片文件名前缀 -> { 原: 是否有原版图片, 堕落: 是否有堕落版图片 }
+const AVAILABLE_NPC_IMAGES: Record<string, { 原: boolean; 堕落: boolean }> = {
+  '艾莉西亚': { 原: true, 堕落: true }, // 注意：堕落版文件名为"艾莉西亚堕落.png"(无连字符)
+  '奥菲莉亚': { 原: true, 堕落: true },
+  '凤漓': { 原: true, 堕落: true },
+  '卡蜜拉': { 原: true, 堕落: true },
+  '莉莉丝': { 原: true, 堕落: true },
+  '露娜': { 原: true, 堕落: true },
+  '罗莎琳德': { 原: true, 堕落: true },
+  '清虚子': { 原: true, 堕落: true },
+  '索菲亚': { 原: true, 堕落: true },
+  '特蕾莎': { 原: true, 堕落: true },
+  '维罗妮卡': { 原: false, 堕落: true }, // 只有堕落版
+  '伊芙琳': { 原: false, 堕落: false }, // 用户示例中提到，需要时添加
+};
+
+// 特殊命名规则的 NPC（堕落版没有连字符）
+const SPECIAL_NAMING_NPCS = ['艾莉西亚'];
 
 /**
  * 根据 NPC 姓名和是否恶堕状态生成图片 URL
- * @param name NPC 姓名
+ * @param name NPC 姓名（角色卡中的全名，如"莉莉丝·暗夜"）
  * @param isCorrupted 是否恶堕
- * @returns 图片 URL，如果 NPC 不在可用列表中则返回 undefined
+ * @returns 图片 URL，如果 NPC 图片不可用则返回 undefined
  */
 export function getNpcImageUrl(name: string, isCorrupted: boolean): string | undefined {
+  // 首先尝试通过名字映射获取图片文件名前缀
+  let imageNamePrefix = NPC_NAME_MAPPING[name];
+
+  // 如果没有映射，尝试直接使用名字（可能是短名）
+  if (!imageNamePrefix) {
+    // 也尝试去掉中间点后的部分
+    const shortName = name.split('·')[0];
+    if (AVAILABLE_NPC_IMAGES[shortName]) {
+      imageNamePrefix = shortName;
+    } else if (AVAILABLE_NPC_IMAGES[name]) {
+      imageNamePrefix = name;
+    } else {
+      return undefined;
+    }
+  }
+
   // 检查 NPC 是否在可用图片列表中
-  if (!AVAILABLE_NPC_IMAGES.includes(name)) {
+  const npcConfig = AVAILABLE_NPC_IMAGES[imageNamePrefix];
+  if (!npcConfig) {
     return undefined;
   }
 
   // 根据是否恶堕选择后缀：true -> "堕落", false -> "原"
   const suffix = isCorrupted ? '堕落' : '原';
-  return `${CDN_BASE_URL}/${encodeURIComponent(name)}-${suffix}.png`;
+
+  // 检查对应状态的图片是否存在
+  if (!npcConfig[suffix]) {
+    return undefined;
+  }
+
+  // 处理特殊命名规则（某些 NPC 的堕落版没有连字符）
+  if (isCorrupted && SPECIAL_NAMING_NPCS.includes(imageNamePrefix)) {
+    return `${CDN_BASE_URL}/${encodeURIComponent(imageNamePrefix)}${suffix}.png`;
+  }
+
+  return `${CDN_BASE_URL}/${encodeURIComponent(imageNamePrefix)}-${suffix}.png`;
 }
 
 // 成就类型

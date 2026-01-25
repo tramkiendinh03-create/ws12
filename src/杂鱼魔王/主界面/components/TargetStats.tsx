@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Heart, Skull, User, Users, ZoomIn } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Heart, Skull, Trash2, User, Users, X, ZoomIn } from 'lucide-react';
 import React, { useCallback, useState } from 'react';
 import { PlayerStats as PlayerStatsData, TargetCharacter } from '../types';
 import { ImageModal } from './ImageModal';
@@ -8,17 +8,20 @@ import { GlassPanel } from './ui/GlassPanel';
 interface Props {
   player: PlayerStatsData;
   targets: TargetCharacter[];
+  onDeleteNpc?: (npcName: string) => void;
 }
 
 type Page = 'player' | 'targets';
 
-export const TargetStats: React.FC<Props> = ({ player, targets }) => {
+export const TargetStats: React.FC<Props> = ({ player, targets, onDeleteNpc }) => {
   const [activePage, setActivePage] = useState<Page>('player');
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [selectedImage, setSelectedImage] = useState<{ url: string; name: string } | null>(null);
   // 记录加载失败的图片 URL，避免重复显示
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+  // 删除确认对话框状态
+  const [deleteConfirm, setDeleteConfirm] = useState<{ name: string; show: boolean }>({ name: '', show: false });
 
   // 处理图片加载错误
   const handleImageError = useCallback((url: string) => {
@@ -26,12 +29,9 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
   }, []);
 
   // 检查图片是否可用（未加载失败）
-  const isImageAvailable = useCallback(
-    (url: string | undefined): url is string => {
-      return !!url && !failedImages.has(url);
-    },
-    [failedImages],
-  );
+  const isImageAvailable = useCallback((url: string | undefined): url is string => {
+    return !!url && !failedImages.has(url);
+  }, [failedImages]);
 
   // --- Image Modal Logic ---
   const openImageModal = (url: string, name: string) => {
@@ -40,6 +40,23 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
 
   const closeImageModal = () => {
     setSelectedImage(null);
+  };
+
+  // --- Delete NPC Logic ---
+  const handleDeleteClick = (npcName: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setDeleteConfirm({ name: npcName, show: true });
+  };
+
+  const confirmDelete = () => {
+    if (onDeleteNpc && deleteConfirm.name) {
+      onDeleteNpc(deleteConfirm.name);
+    }
+    setDeleteConfirm({ name: '', show: false });
+  };
+
+  const cancelDelete = () => {
+    setDeleteConfirm({ name: '', show: false });
   };
 
   const pages: Page[] = ['player', 'targets'];
@@ -89,137 +106,148 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
               {/* Background Card Style */}
               <div className="bg-void-950/60 absolute inset-0 rounded-xl border border-white/10 shadow-lg transition-colors group-hover:border-crimson-500/40"></div>
 
-              {/* Inner Content - Responsive Row Layout */}
-              <div className="relative flex flex-row items-center gap-3 p-2.5">
-                {/* Avatar Column - 可点击展开 */}
-                <div className="relative shrink-0">
-                  {(() => {
-                    const hasValidImage = isImageAvailable(target.avatarUrl);
-                    return (
-                      <div
-                        className={`relative h-14 w-14 overflow-hidden rounded-full bg-gradient-to-b from-gray-600 to-black p-[2px] shadow-md transition-all duration-300 ${
-                          hasValidImage
-                            ? 'hover:ring-crimson-500/50 hover:shadow-crimson-500/20 hover:shadow-lg hover:ring-2 cursor-pointer'
-                            : ''
-                        } ${target.isCorrupted ? 'ring-2 ring-purple-500/60' : ''}`}
-                        onClick={() => hasValidImage && openImageModal(target.avatarUrl!, target.name)}
-                        title={hasValidImage ? '点击查看大图' : ''}
-                      >
-                        {hasValidImage ? (
-                          <>
-                            <img
-                              src={target.avatarUrl}
-                              alt={target.name}
-                              className={`h-full w-full rounded-full object-cover transition-all duration-500 group-hover:grayscale-0 ${
-                                target.isCorrupted ? 'grayscale-0' : 'grayscale-[10%]'
-                              }`}
-                              onError={() => handleImageError(target.avatarUrl!)}
-                            />
-                            {/* 放大图标提示 */}
-                            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                              <ZoomIn size={16} className="text-white/80" />
-                            </div>
-                            {/* 恶堕标识 */}
-                            {target.isCorrupted && (
-                              <div className="absolute -top-1 -right-1 z-20 flex h-4 w-4 items-center justify-center rounded-full bg-purple-600 shadow-lg">
-                                <Skull size={10} className="text-white" />
-                              </div>
-                            )}
-                          </>
-                        ) : (
-                          <div
-                            className={`flex h-full w-full items-center justify-center rounded-full ${
-                              target.isCorrupted
-                                ? 'bg-gradient-to-br from-purple-600 to-black'
-                                : 'from-crimson-600 bg-gradient-to-br to-purple-600'
-                            }`}
-                          >
-                            <User size={20} className="text-white/80" />
-                            {/* 恶堕标识 */}
-                            {target.isCorrupted && (
-                              <div className="absolute -top-1 -right-1 z-20 flex h-4 w-4 items-center justify-center rounded-full bg-purple-600 shadow-lg">
-                                <Skull size={10} className="text-white" />
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })()}
-                  {/* Level Badge - Adjusted for overlap */}
-                  <div className="bg-void-900 font-display absolute -right-1 -bottom-1 z-10 rounded border border-white/20 px-1.5 py-0.5 text-[9px] text-gray-300 shadow-md">
-                    {target.level}
-                  </div>
+              {/* 删除按钮 - 悬浮时显示 */}
+              {onDeleteNpc && (
+                <button
+                  onClick={(e) => handleDeleteClick(target.name, e)}
+                  className="absolute top-1 right-1 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-red-600/80 opacity-0 shadow-lg transition-all duration-200 group-hover:opacity-100 hover:scale-110 hover:bg-red-500"
+                  title={`删除 ${target.name}`}
+                >
+                  <Trash2 size={12} className="text-white" />
+                </button>
+              )}
+
+              {/* Inner Content - Vertical Layout with Name on Top */}
+              <div className="relative flex flex-col p-2.5">
+                {/* Name Header - 放在头像上方 */}
+                <div className="mb-2 text-center">
+                  <h3 className="font-display truncate text-sm font-bold text-gray-200 transition-colors group-hover:text-crimson-400">
+                    {target.name}
+                  </h3>
+                  <span className="block truncate font-serif text-[10px] text-gray-500">{target.title}</span>
                 </div>
 
-                {/* Info Column */}
-                <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-                  {/* Name & Title Row */}
-                  <div className="flex items-baseline justify-between border-b border-white/5 pb-1">
-                    <div className="truncate pr-2">
-                      <h3 className="font-display truncate text-sm font-bold text-gray-200 transition-colors group-hover:text-crimson-400">
-                        {target.name}
-                      </h3>
-                      <span className="block truncate font-serif text-[10px] text-gray-500">{target.title}</span>
+                {/* Avatar and Info Row */}
+                <div className="flex flex-row items-start gap-3">
+                  {/* Avatar Column - 可点击展开 */}
+                  <div className="relative shrink-0">
+                    {(() => {
+                      const hasValidImage = isImageAvailable(target.avatarUrl);
+                      return (
+                        <div
+                          className={`relative h-14 w-14 overflow-hidden rounded-full bg-gradient-to-b from-gray-600 to-black p-[2px] shadow-md transition-all duration-300 ${hasValidImage
+                            ? 'hover:ring-crimson-500/50 hover:shadow-crimson-500/20 hover:shadow-lg hover:ring-2 cursor-pointer'
+                            : ''
+                            } ${target.isCorrupted ? 'ring-2 ring-purple-500/60' : ''}`}
+                          onClick={() => hasValidImage && openImageModal(target.avatarUrl!, target.name)}
+                          title={hasValidImage ? '点击查看大图' : ''}
+                        >
+                          {hasValidImage ? (
+                            <>
+                              <img
+                                src={target.avatarUrl}
+                                alt={target.name}
+                                className={`h-full w-full rounded-full object-cover transition-all duration-500 group-hover:grayscale-0 ${target.isCorrupted ? 'grayscale-0' : 'grayscale-[10%]'
+                                  }`}
+                                onError={() => handleImageError(target.avatarUrl!)}
+                              />
+                              {/* 放大图标提示 */}
+                              <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                <ZoomIn size={16} className="text-white/80" />
+                              </div>
+                              {/* 恶堕标识 */}
+                              {target.isCorrupted && (
+                                <div className="absolute -top-1 -right-1 z-20 flex h-4 w-4 items-center justify-center rounded-full bg-purple-600 shadow-lg">
+                                  <Skull size={10} className="text-white" />
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <div className={`flex h-full w-full items-center justify-center rounded-full ${target.isCorrupted
+                              ? 'bg-gradient-to-br from-purple-600 to-black'
+                              : 'from-crimson-600 bg-gradient-to-br to-purple-600'
+                              }`}>
+                              <User size={20} className="text-white/80" />
+                              {/* 恶堕标识 */}
+                              {target.isCorrupted && (
+                                <div className="absolute -top-1 -right-1 z-20 flex h-4 w-4 items-center justify-center rounded-full bg-purple-600 shadow-lg">
+                                  <Skull size={10} className="text-white" />
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                    {/* Level Badge - Adjusted for overlap */}
+                    <div className="bg-void-900 font-display absolute -right-1 -bottom-1 z-10 rounded border border-white/20 px-1.5 py-0.5 text-[9px] text-gray-300 shadow-md">
+                      {target.level}
                     </div>
-                    <span className="rounded border border-white/5 bg-white/5 px-1.5 py-0.5 text-[9px] whitespace-nowrap text-gray-400">
-                      {target.currentStatus}
-                    </span>
                   </div>
 
-                  {/* Compact Status Bars */}
-                  <div className="grid w-full grid-cols-1 gap-1.5">
-                    {/* Affection (好感度) */}
-                    <div className="flex items-center gap-1.5">
-                      <Heart size={10} className="shrink-0 text-pink-500/80" />
-                      <div className="bg-void-800 relative h-1 flex-1 overflow-hidden rounded-full">
-                        <div
-                          className="h-full rounded-full bg-pink-600/80"
-                          style={{ width: `${(target.affection.value / target.affection.max) * 100}%` }}
-                        />
-                      </div>
-                      <span className="w-5 text-right font-mono text-[9px] leading-none text-pink-300">
-                        {target.affection.value}
+                  {/* Info Column */}
+                  <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                    {/* Status Badge */}
+                    <div className="flex justify-end">
+                      <span className="rounded border border-white/5 bg-white/5 px-1.5 py-0.5 text-[9px] whitespace-nowrap text-gray-400">
+                        {target.currentStatus}
                       </span>
                     </div>
 
-                    {/* Corruption (迷堕度) */}
-                    <div className="flex items-center gap-1.5">
-                      <Skull size={10} className="shrink-0 text-purple-500/80" />
-                      <div className="bg-void-800 relative h-1 flex-1 overflow-hidden rounded-full">
-                        <div
-                          className="h-full rounded-full bg-purple-600/80"
-                          style={{ width: `${(target.corruption.value / target.corruption.max) * 100}%` }}
-                        />
+                    {/* Compact Status Bars */}
+                    <div className="grid w-full grid-cols-1 gap-1.5">
+                      {/* Affection (好感度) */}
+                      <div className="flex items-center gap-1.5">
+                        <Heart size={10} className="shrink-0 text-pink-500/80" />
+                        <div className="bg-void-800 relative h-1 flex-1 overflow-hidden rounded-full">
+                          <div
+                            className="h-full rounded-full bg-pink-600/80"
+                            style={{ width: `${(target.affection.value / target.affection.max) * 100}%` }}
+                          />
+                        </div>
+                        <span className="w-5 text-right font-mono text-[9px] leading-none text-pink-300">
+                          {target.affection.value}
+                        </span>
                       </div>
-                      <span className="w-5 text-right font-mono text-[9px] leading-none text-purple-300">
-                        {target.corruption.value}
-                      </span>
-                    </div>
-                  </div>
 
-                  {/* 阶段描述 */}
-                  <div className="flex gap-2 text-[8px]">
-                    <span className="text-pink-400/80">{target.affection.description}</span>
-                    <span className="text-gray-600">|</span>
-                    <span className="text-purple-400/80">{target.corruption.description}</span>
-                  </div>
-
-                  {/* 特征标签 */}
-                  {(target.traits.core || target.traits.weakness) && (
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      {target.traits.core && (
-                        <span className="bg-crimson-900/40 border-crimson-500/30 text-crimson-300 rounded border px-1.5 py-0.5 text-[8px]">
-                          {target.traits.core}
+                      {/* Corruption (迷堕度) */}
+                      <div className="flex items-center gap-1.5">
+                        <Skull size={10} className="shrink-0 text-purple-500/80" />
+                        <div className="bg-void-800 relative h-1 flex-1 overflow-hidden rounded-full">
+                          <div
+                            className="h-full rounded-full bg-purple-600/80"
+                            style={{ width: `${(target.corruption.value / target.corruption.max) * 100}%` }}
+                          />
+                        </div>
+                        <span className="w-5 text-right font-mono text-[9px] leading-none text-purple-300">
+                          {target.corruption.value}
                         </span>
-                      )}
-                      {target.traits.weakness && (
-                        <span className="rounded border border-purple-500/30 bg-purple-900/40 px-1.5 py-0.5 text-[8px] text-purple-300">
-                          {target.traits.weakness}
-                        </span>
-                      )}
+                      </div>
                     </div>
-                  )}
+
+                    {/* 阶段描述 */}
+                    <div className="flex gap-2 text-[8px]">
+                      <span className="text-pink-400/80">{target.affection.description}</span>
+                      <span className="text-gray-600">|</span>
+                      <span className="text-purple-400/80">{target.corruption.description}</span>
+                    </div>
+
+                    {/* 特征标签 */}
+                    {(target.traits.core || target.traits.weakness) && (
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {target.traits.core && (
+                          <span className="bg-crimson-900/40 border-crimson-500/30 text-crimson-300 rounded border px-1.5 py-0.5 text-[8px]">
+                            {target.traits.core}
+                          </span>
+                        )}
+                        {target.traits.weakness && (
+                          <span className="rounded border border-purple-500/30 bg-purple-900/40 px-1.5 py-0.5 text-[8px] text-purple-300">
+                            {target.traits.weakness}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -257,11 +285,10 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
             onClick={() => setActivePage(tab.id as Page)}
             className={`
                         relative flex h-14 w-10 items-center justify-center rounded-r-md border-y border-r shadow-xl transition-all duration-300
-                        ${
-                          activePage === tab.id
-                            ? `bg-void-900 ${tab.color} translate-x-0`
-                            : 'bg-void-950 -translate-x-2 border-white/10 text-gray-500 hover:-translate-x-1 hover:text-gray-300'
-                        }
+                        ${activePage === tab.id
+                ? `bg-void-900 ${tab.color} translate-x-0`
+                : 'bg-void-950 -translate-x-2 border-white/10 text-gray-500 hover:-translate-x-1 hover:text-gray-300'
+              }
                     `}
           >
             <div className="bg-noise pointer-events-none absolute inset-0 opacity-20"></div>
@@ -317,11 +344,10 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
               onClick={() => setActivePage(page)}
               className={`
                         flex flex-1 items-center justify-center gap-2 rounded-full py-2 text-xs font-bold transition-all duration-300
-                        ${
-                          isActive
-                            ? 'bg-crimson-900/60 text-crimson-200 shadow-lg'
-                            : 'text-gray-500 hover:text-gray-300'
-                        }
+                        ${isActive
+                  ? 'bg-crimson-900/60 text-crimson-200 shadow-lg'
+                  : 'text-gray-500 hover:text-gray-300'
+                }
                     `}
             >
               {icons[page]}
@@ -338,6 +364,50 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
         altText={selectedImage?.name || ''}
         onClose={closeImageModal}
       />
+
+      {/* 删除确认对话框 */}
+      {deleteConfirm.show && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-void-900 relative mx-4 w-full max-w-sm rounded-xl border border-white/10 p-6 shadow-2xl">
+            {/* 关闭按钮 */}
+            <button
+              onClick={cancelDelete}
+              className="absolute top-3 right-3 text-gray-400 transition-colors hover:text-white"
+            >
+              <X size={18} />
+            </button>
+
+            {/* 警告图标 */}
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-600/20">
+              <Trash2 size={24} className="text-red-400" />
+            </div>
+
+            {/* 标题和内容 */}
+            <h3 className="mb-2 text-center text-lg font-bold text-gray-200">
+              确认删除
+            </h3>
+            <p className="mb-6 text-center text-sm text-gray-400">
+              确定要从猎物名单中删除 <span className="text-crimson-400 font-semibold">{deleteConfirm.name}</span> 吗？
+            </p>
+
+            {/* 按钮组 */}
+            <div className="flex gap-3">
+              <button
+                onClick={cancelDelete}
+                className="flex-1 rounded-lg border border-white/10 bg-white/5 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-white/10"
+              >
+                取消
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="flex-1 rounded-lg bg-red-600 py-2 text-sm font-medium text-white transition-colors hover:bg-red-500"
+              >
+                确认删除
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
