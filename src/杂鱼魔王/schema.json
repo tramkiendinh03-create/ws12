@@ -45,6 +45,10 @@
         "default": {},
         "type": "object",
         "properties": {
+          "种族": {
+            "default": "未知",
+            "type": "string"
+          },
           "身份": {
             "type": "string"
           },
@@ -55,6 +59,9 @@
           "当前状态": {
             "default": "正常",
             "type": "string"
+          },
+          "是否恶堕": {
+            "type": "boolean"
           },
           "头像": {
             "type": "string"

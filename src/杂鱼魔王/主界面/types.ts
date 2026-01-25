@@ -22,6 +22,7 @@ export interface TargetCharacter {
   race?: string;
   level: string; // 等级 e.g., "Lv. 95"
   currentStatus: string; // 当前状态
+  isCorrupted: boolean; // 是否恶堕
   affection: {
     value: number;
     max: number;
@@ -40,7 +41,45 @@ export interface TargetCharacter {
     special: string; // 特质
     xpTendency: string; // XP倾向
   };
-  avatarUrl?: string;
+  avatarUrl?: string; // 手动设置的头像 URL
+}
+
+// CDN 图床基础 URL
+const CDN_BASE_URL = 'https://cdn.jsdelivr.net/gh/tramkiendinh03-create/ws12@main/llmw';
+
+// 可用的 NPC 图片列表（用于检测图片是否存在）
+const AVAILABLE_NPC_IMAGES = [
+  '艾莉西亚',
+  '奥菲莉亚',
+  '凤漓',
+  '卡蜜拉',
+  '莉莉丝',
+  '露娜',
+  '罗莎琳德',
+  '清虚子',
+  '索菲亚',
+  '特蕾莎',
+  '维罗妮卡',
+  '亚力克西斯',
+  '伊芙琳',
+  '玉藻前',
+];
+
+/**
+ * 根据 NPC 姓名和是否恶堕状态生成图片 URL
+ * @param name NPC 姓名
+ * @param isCorrupted 是否恶堕
+ * @returns 图片 URL，如果 NPC 不在可用列表中则返回 undefined
+ */
+export function getNpcImageUrl(name: string, isCorrupted: boolean): string | undefined {
+  // 检查 NPC 是否在可用图片列表中
+  if (!AVAILABLE_NPC_IMAGES.includes(name)) {
+    return undefined;
+  }
+
+  // 根据是否恶堕选择后缀：true -> "堕落", false -> "原"
+  const suffix = isCorrupted ? '堕落' : '原';
+  return `${CDN_BASE_URL}/${encodeURIComponent(name)}-${suffix}.png`;
 }
 
 // 成就类型
@@ -122,30 +161,38 @@ export function transformMvuToPlayerStats(data: MvuData): PlayerStats {
 }
 
 export function transformMvuToTargets(data: MvuData): TargetCharacter[] {
-  return Object.entries(data.NPC名册).map(([name, npc], index) => ({
-    id: `target_${index}`,
-    name,
-    title: npc.身份,
-    level: npc.等级,
-    currentStatus: npc.当前状态,
-    avatarUrl: npc.头像 || undefined, // 头像 URL
-    affection: {
-      value: npc.好感度.数值,
-      max: npc.好感度.最大值,
-      description: npc.好感度.阶段,
-    },
-    corruption: {
-      value: npc.恶堕度.数值,
-      max: npc.恶堕度.最大值,
-      description: npc.恶堕度.阶段,
-    },
-    traits: {
-      core: npc.特征标签.核心,
-      weakness: npc.特征标签.弱点,
-      special: npc.特征标签.特质,
-      xpTendency: npc.特征标签.XP倾向,
-    },
-  }));
+  return Object.entries(data.NPC名册).map(([name, npc], index) => {
+    const isCorrupted = npc.是否恶堕 ?? false;
+    // 优先使用手动设置的头像，否则根据姓名和恶堕状态生成图片 URL
+    const avatarUrl = npc.头像 || getNpcImageUrl(name, isCorrupted);
+
+    return {
+      id: `target_${index}`,
+      name,
+      title: npc.身份,
+      race: npc.种族,
+      level: npc.等级,
+      currentStatus: npc.当前状态,
+      isCorrupted,
+      avatarUrl,
+      affection: {
+        value: npc.好感度.数值,
+        max: npc.好感度.最大值,
+        description: npc.好感度.阶段,
+      },
+      corruption: {
+        value: npc.恶堕度.数值,
+        max: npc.恶堕度.最大值,
+        description: npc.恶堕度.阶段,
+      },
+      traits: {
+        core: npc.特征标签.核心,
+        weakness: npc.特征标签.弱点,
+        special: npc.特征标签.特质,
+        xpTendency: npc.特征标签.XP倾向,
+      },
+    };
+  });
 }
 
 export function transformMvuToAchievements(data: MvuData): Achievement[] {

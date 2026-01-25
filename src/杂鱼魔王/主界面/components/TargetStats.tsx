@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight, Heart, Skull, User, Users, ZoomIn } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { PlayerStats as PlayerStatsData, TargetCharacter } from '../types';
 import { ImageModal } from './ImageModal';
 import { PlayerStats } from './PlayerStats';
@@ -17,6 +17,18 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [selectedImage, setSelectedImage] = useState<{ url: string; name: string } | null>(null);
+  // 记录加载失败的图片 URL，避免重复显示
+  const [failedImages, setFailedImages] = useState<Set<string>>(new Set());
+
+  // 处理图片加载错误
+  const handleImageError = useCallback((url: string) => {
+    setFailedImages(prev => new Set(prev).add(url));
+  }, []);
+
+  // 检查图片是否可用（未加载失败）
+  const isImageAvailable = useCallback((url: string | undefined): url is string => {
+    return !!url && !failedImages.has(url);
+  }, [failedImages]);
 
   // --- Image Modal Logic ---
   const openImageModal = (url: string, name: string) => {
@@ -78,33 +90,54 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
               <div className="relative flex flex-row items-center gap-3 p-2.5">
                 {/* Avatar Column - 可点击展开 */}
                 <div className="relative shrink-0">
-                  <div
-                    className={`relative h-14 w-14 overflow-hidden rounded-full bg-gradient-to-b from-gray-600 to-black p-[2px] shadow-md transition-all duration-300 ${
-                      target.avatarUrl
-                        ? 'cursor-pointer hover:ring-2 hover:ring-crimson-500/50 hover:shadow-lg hover:shadow-crimson-500/20'
-                        : ''
-                    }`}
-                    onClick={() => target.avatarUrl && openImageModal(target.avatarUrl, target.name)}
-                    title={target.avatarUrl ? '点击查看大图' : ''}
-                  >
-                    {target.avatarUrl ? (
-                      <>
-                        <img
-                          src={target.avatarUrl}
-                          alt={target.name}
-                          className="h-full w-full rounded-full object-cover grayscale-[10%] transition-all duration-500 group-hover:grayscale-0"
-                        />
-                        {/* 放大图标提示 */}
-                        <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                          <ZoomIn size={16} className="text-white/80" />
-                        </div>
-                      </>
-                    ) : (
-                      <div className="h-full w-full rounded-full bg-gradient-to-br from-crimson-600 to-purple-600 flex items-center justify-center">
-                        <User size={20} className="text-white/80" />
+                  {(() => {
+                    const hasValidImage = isImageAvailable(target.avatarUrl);
+                    return (
+                      <div
+                        className={`relative h-14 w-14 overflow-hidden rounded-full bg-gradient-to-b from-gray-600 to-black p-[2px] shadow-md transition-all duration-300 ${hasValidImage
+                            ? 'hover:ring-crimson-500/50 hover:shadow-crimson-500/20 hover:shadow-lg hover:ring-2 cursor-pointer'
+                            : ''
+                          } ${target.isCorrupted ? 'ring-2 ring-purple-500/60' : ''}`}
+                        onClick={() => hasValidImage && openImageModal(target.avatarUrl!, target.name)}
+                        title={hasValidImage ? '点击查看大图' : ''}
+                      >
+                        {hasValidImage ? (
+                          <>
+                            <img
+                              src={target.avatarUrl}
+                              alt={target.name}
+                              className={`h-full w-full rounded-full object-cover transition-all duration-500 group-hover:grayscale-0 ${target.isCorrupted ? 'grayscale-0' : 'grayscale-[10%]'
+                                }`}
+                              onError={() => handleImageError(target.avatarUrl!)}
+                            />
+                            {/* 放大图标提示 */}
+                            <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                              <ZoomIn size={16} className="text-white/80" />
+                            </div>
+                            {/* 恶堕标识 */}
+                            {target.isCorrupted && (
+                              <div className="absolute -top-1 -right-1 z-20 flex h-4 w-4 items-center justify-center rounded-full bg-purple-600 shadow-lg">
+                                <Skull size={10} className="text-white" />
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className={`flex h-full w-full items-center justify-center rounded-full ${target.isCorrupted
+                              ? 'bg-gradient-to-br from-purple-600 to-black'
+                              : 'from-crimson-600 bg-gradient-to-br to-purple-600'
+                            }`}>
+                            <User size={20} className="text-white/80" />
+                            {/* 恶堕标识 */}
+                            {target.isCorrupted && (
+                              <div className="absolute -top-1 -right-1 z-20 flex h-4 w-4 items-center justify-center rounded-full bg-purple-600 shadow-lg">
+                                <Skull size={10} className="text-white" />
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
+                    );
+                  })()}
                   {/* Level Badge - Adjusted for overlap */}
                   <div className="bg-void-900 font-display absolute -right-1 -bottom-1 z-10 rounded border border-white/20 px-1.5 py-0.5 text-[9px] text-gray-300 shadow-md">
                     {target.level}
@@ -166,14 +199,14 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
 
                   {/* 特征标签 */}
                   {(target.traits.core || target.traits.weakness) && (
-                    <div className="flex flex-wrap gap-1 mt-1">
+                    <div className="mt-1 flex flex-wrap gap-1">
                       {target.traits.core && (
-                        <span className="rounded bg-crimson-900/40 border border-crimson-500/30 px-1.5 py-0.5 text-[8px] text-crimson-300">
+                        <span className="bg-crimson-900/40 border-crimson-500/30 text-crimson-300 rounded border px-1.5 py-0.5 text-[8px]">
                           {target.traits.core}
                         </span>
                       )}
                       {target.traits.weakness && (
-                        <span className="rounded bg-purple-900/40 border border-purple-500/30 px-1.5 py-0.5 text-[8px] text-purple-300">
+                        <span className="rounded border border-purple-500/30 bg-purple-900/40 px-1.5 py-0.5 text-[8px] text-purple-300">
                           {target.traits.weakness}
                         </span>
                       )}
@@ -185,7 +218,7 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
           );
         })}
         {targets.length === 0 && (
-          <div className="col-span-full text-center py-8 text-gray-500">
+          <div className="col-span-full py-8 text-center text-gray-500">
             <Users size={32} className="mx-auto mb-2 opacity-50" />
             <p className="text-sm">暂无目标</p>
           </div>
@@ -216,11 +249,10 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
             onClick={() => setActivePage(tab.id as Page)}
             className={`
                         relative flex h-14 w-10 items-center justify-center rounded-r-md border-y border-r shadow-xl transition-all duration-300
-                        ${
-                          activePage === tab.id
-                            ? `bg-void-900 ${tab.color} translate-x-0`
-                            : 'bg-void-950 -translate-x-2 border-white/10 text-gray-500 hover:-translate-x-1 hover:text-gray-300'
-                        }
+                        ${activePage === tab.id
+                ? `bg-void-900 ${tab.color} translate-x-0`
+                : 'bg-void-950 -translate-x-2 border-white/10 text-gray-500 hover:-translate-x-1 hover:text-gray-300'
+              }
                     `}
           >
             <div className="bg-noise pointer-events-none absolute inset-0 opacity-20"></div>
@@ -276,11 +308,10 @@ export const TargetStats: React.FC<Props> = ({ player, targets }) => {
               onClick={() => setActivePage(page)}
               className={`
                         flex flex-1 items-center justify-center gap-2 rounded-full py-2 text-xs font-bold transition-all duration-300
-                        ${
-                          isActive
-                            ? 'bg-crimson-900/60 text-crimson-200 shadow-lg'
-                            : 'text-gray-500 hover:text-gray-300'
-                        }
+                        ${isActive
+                  ? 'bg-crimson-900/60 text-crimson-200 shadow-lg'
+                  : 'text-gray-500 hover:text-gray-300'
+                }
                     `}
             >
               {icons[page]}

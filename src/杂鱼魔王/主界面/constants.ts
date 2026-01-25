@@ -42,11 +42,13 @@ export const INITIAL_PLAYER: PlayerStats = {
 export const INITIAL_TARGETS: TargetCharacter[] = [
   {
     id: 'target_001',
-    name: '莉莉丝·暗夜',
+    name: '莉莉丝',
     title: '前代魔王子嗣 / 双胞胎姐姐 / 深渊领主(封印中)',
     level: 'Lv. 95（封印状态）',
     currentStatus: '正常',
-    avatarUrl: 'https://api.dicebear.com/9.x/notionists/svg?seed=Lilith&backgroundColor=1f1a29&hair=black&eyes=purple',
+    isCorrupted: false,
+    // 使用 CDN 图床图片，根据姓名和恶堕状态自动生成 URL
+    avatarUrl: 'https://cdn.jsdelivr.net/gh/tramkiendinh03-create/ws12@main/llmw/莉莉丝-原.png',
     affection: {
       value: 65,
       max: 100,

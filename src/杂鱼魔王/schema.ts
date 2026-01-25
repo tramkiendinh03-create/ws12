@@ -21,10 +21,12 @@ export const Schema = z.object({
       z.string().describe('NPC名字'),
       z
         .object({
+          种族: z.string().prefault('未知'),
           身份: z.string().prefault(''),
           等级: z.string().prefault('Lv. 1'),
           当前状态: z.string().prefault('正常'),
-          头像: z.string().prefault(''), // 头像 URL
+          是否恶堕: z.boolean().prefault(false),
+          头像: z.string().prefault(''), // 头像 URL (手动设置时使用)
           好感度: z
             .object({
               数值: z.coerce
@@ -54,7 +56,14 @@ export const Schema = z.object({
             })
             .prefault({}),
         })
-        .prefault({}),
+        .prefault({})
+        .transform(npc => {
+          // 逻辑一致性：恶堕度不足 80 时强制设为未恶堕
+          if (npc.恶堕度.数值 < 80) {
+            npc.是否恶堕 = false;
+          }
+          return npc;
+        }),
     )
     .prefault({}),
 
