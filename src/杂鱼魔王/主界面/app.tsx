@@ -57,7 +57,7 @@ const App: React.FC = () => {
       {/* Main Container - Reverted to max-w-4xl for compact/flat look */}
       <div className="relative z-10 container mx-auto flex h-full max-w-4xl flex-col p-3 md:p-4">
         {/* Top Status Bar */}
-        <WorldStatusBar world={displayWorld} onMenuToggle={() => { }} isMobileMenuOpen={false} />
+        <WorldStatusBar world={displayWorld} onMenuToggle={() => {}} isMobileMenuOpen={false} />
 
         {/* Content Area (Stats Book) */}
         <div className="perspective-1000 mt-3 min-h-0 flex-1">

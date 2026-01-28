@@ -62,25 +62,31 @@ export function useGameState() {
   const achievements: Achievement[] = data ? transformMvuToAchievements(data) : [];
 
   // 删除NPC功能
-  const deleteNpc = useCallback((npcName: string) => {
-    try {
-      const message_id = getCurrentMessageId();
-      updateVariablesWith((variables: Record<string, unknown>) => {
-        const npc_roster = _.get(variables, 'stat_data.NPC名册', {}) as Record<string, unknown>;
-        if (_.has(npc_roster, npcName)) {
-          _.unset(npc_roster, npcName);
-          console.log(`[MVU] 已删除NPC: ${npcName}`);
-        } else {
-          console.warn(`[MVU] 未找到NPC: ${npcName}`);
-        }
-        return variables;
-      }, { type: 'message', message_id });
-      // 刷新数据
-      refetch();
-    } catch (e) {
-      console.error('删除NPC失败:', e);
-    }
-  }, [refetch]);
+  const deleteNpc = useCallback(
+    (npcName: string) => {
+      try {
+        const message_id = getCurrentMessageId();
+        updateVariablesWith(
+          (variables: Record<string, unknown>) => {
+            const npc_roster = _.get(variables, 'stat_data.NPC名册', {}) as Record<string, unknown>;
+            if (_.has(npc_roster, npcName)) {
+              _.unset(npc_roster, npcName);
+              console.log(`[MVU] 已删除NPC: ${npcName}`);
+            } else {
+              console.warn(`[MVU] 未找到NPC: ${npcName}`);
+            }
+            return variables;
+          },
+          { type: 'message', message_id },
+        );
+        // 刷新数据
+        refetch();
+      } catch (e) {
+        console.error('删除NPC失败:', e);
+      }
+    },
+    [refetch],
+  );
 
   return {
     world,
