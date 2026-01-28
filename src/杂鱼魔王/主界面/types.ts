@@ -50,6 +50,7 @@ const CDN_BASE_URL = 'https://cdn.jsdelivr.net/gh/tramkiendinh03-create/ws12@mai
 // NPC 名字到图片文件名的映射（处理角色卡中的全名与图片文件名不一致的情况）
 // 例如：角色卡中叫"莉莉丝·暗夜"，但图片文件名是"莉莉丝-原.png"
 const NPC_NAME_MAPPING: Record<string, string> = {
+  // 带有中间点的全名映射
   '莉莉丝·暗夜': '莉莉丝',
   '卡蜜拉·永夜': '卡蜜拉',
   '艾莉西亚·晨曦': '艾莉西亚',
@@ -59,52 +60,127 @@ const NPC_NAME_MAPPING: Record<string, string> = {
   '索菲亚·智慧': '索菲亚',
   '特蕾莎·圣光': '特蕾莎',
   '维罗妮卡·毒藤': '维罗妮卡',
+  '阿黛莱德·黎明': '阿黛莱德',
+  '阿娜斯塔西娅·冰霜': '阿娜斯塔西娅',
+  '爱丽丝·梦境': '爱丽丝',
+  '莉莉安·晨露': '莉莉安',
+  '塞拉菲娜·炽焰': '塞拉菲娜',
+  '希尔维娅·风语': '希尔维娅',
+  '亚力克西斯·雷霆': '亚力克西斯',
+  '伊莎贝拉·暮色': '伊莎贝拉',
+  '玉藻前·狐火': '玉藻前',
+  // 不带中间点的短名（直接映射自身）
   '清虚子': '清虚子',
   '凤漓': '凤漓',
   '伊芙琳': '伊芙琳',
+  '阿黛莱德': '阿黛莱德',
+  '阿娜斯塔西娅': '阿娜斯塔西娅',
+  '艾莉西亚': '艾莉西亚',
+  '爱丽丝': '爱丽丝',
+  '奥菲莉亚': '奥菲莉亚',
+  '卡蜜拉': '卡蜜拉',
+  '莉莉安': '莉莉安',
+  '莉莉丝': '莉莉丝',
+  '露娜': '露娜',
+  '罗莎琳德': '罗莎琳德',
+  '塞拉菲娜': '塞拉菲娜',
+  '索菲亚': '索菲亚',
+  '特蕾莎': '特蕾莎',
+  '维罗妮卡': '维罗妮卡',
+  '希尔维娅': '希尔维娅',
+  '亚力克西斯': '亚力克西斯',
+  '伊莎贝拉': '伊莎贝拉',
+  '玉藻前': '玉藻前',
 };
 
 // 可用的 NPC 图片配置（基于 llmw 文件夹中的实际图片）
 // 格式：图片文件名前缀 -> { 原: 是否有原版图片, 堕落: 是否有堕落版图片 }
 const AVAILABLE_NPC_IMAGES: Record<string, { 原: boolean; 堕落: boolean }> = {
+  '阿黛莱德': { 原: true, 堕落: true },
+  '阿娜斯塔西娅': { 原: true, 堕落: true },
   '艾莉西亚': { 原: true, 堕落: true }, // 注意：堕落版文件名为"艾莉西亚堕落.png"(无连字符)
+  '爱丽丝': { 原: true, 堕落: true },
   '奥菲莉亚': { 原: true, 堕落: true },
   '凤漓': { 原: true, 堕落: true },
   '卡蜜拉': { 原: true, 堕落: true },
+  '莉莉安': { 原: true, 堕落: true },
   '莉莉丝': { 原: true, 堕落: true },
   '露娜': { 原: true, 堕落: true },
   '罗莎琳德': { 原: true, 堕落: true },
   '清虚子': { 原: true, 堕落: true },
+  '塞拉菲娜': { 原: true, 堕落: true },
   '索菲亚': { 原: true, 堕落: true },
   '特蕾莎': { 原: true, 堕落: true },
-  '维罗妮卡': { 原: false, 堕落: true }, // 只有堕落版
-  '伊芙琳': { 原: false, 堕落: false }, // 用户示例中提到，需要时添加
+  '维罗妮卡': { 原: true, 堕落: true },
+  '希尔维娅': { 原: true, 堕落: true },
+  '亚力克西斯': { 原: true, 堕落: true },
+  '伊芙琳': { 原: true, 堕落: true },
+  '伊莎贝拉': { 原: true, 堕落: true },
+  '玉藻前': { 原: true, 堕落: true },
 };
 
 // 特殊命名规则的 NPC（堕落版没有连字符）
 const SPECIAL_NAMING_NPCS = ['艾莉西亚'];
 
 /**
+ * 模糊匹配 NPC 名字到可用的图片名前缀
+ * 支持多种匹配策略：精确匹配、分割匹配、包含匹配
+ * @param name NPC 姓名
+ * @returns 匹配到的图片名前缀，如果没有匹配则返回 undefined
+ */
+function fuzzyMatchNpcName(name: string): string | undefined {
+  // 策略1: 精确匹配映射表
+  if (NPC_NAME_MAPPING[name]) {
+    return NPC_NAME_MAPPING[name];
+  }
+
+  // 策略2: 直接匹配可用图片列表
+  if (AVAILABLE_NPC_IMAGES[name]) {
+    return name;
+  }
+
+  // 策略3: 分割中间点后取第一部分
+  const shortName = name.split('·')[0];
+  if (AVAILABLE_NPC_IMAGES[shortName]) {
+    return shortName;
+  }
+
+  // 策略4: 分割连字符后取第一部分
+  const hyphenName = name.split('-')[0];
+  if (AVAILABLE_NPC_IMAGES[hyphenName]) {
+    return hyphenName;
+  }
+
+  // 策略5: 检查可用图片名是否包含在输入名字中
+  const availableNames = Object.keys(AVAILABLE_NPC_IMAGES);
+  for (const availableName of availableNames) {
+    if (name.includes(availableName)) {
+      return availableName;
+    }
+  }
+
+  // 策略6: 检查输入名字是否包含在可用图片名中
+  for (const availableName of availableNames) {
+    if (availableName.includes(name)) {
+      return availableName;
+    }
+  }
+
+  return undefined;
+}
+
+/**
  * 根据 NPC 姓名和是否恶堕状态生成图片 URL
- * @param name NPC 姓名（角色卡中的全名，如"莉莉丝·暗夜"）
- * @param isCorrupted 是否恶堕
+ * @param name NPC 姓名（角色卡中的全名，如"莉莉丝·暗夜"，或短名如"伊芙琳"）
+ * @param isCorrupted 是否恶堕（true -> 堕落版, false -> 原版）
  * @returns 图片 URL，如果 NPC 图片不可用则返回 undefined
  */
 export function getNpcImageUrl(name: string, isCorrupted: boolean): string | undefined {
-  // 首先尝试通过名字映射获取图片文件名前缀
-  let imageNamePrefix = NPC_NAME_MAPPING[name];
+  // 使用模糊匹配获取图片文件名前缀
+  const imageNamePrefix = fuzzyMatchNpcName(name);
 
-  // 如果没有映射，尝试直接使用名字（可能是短名）
   if (!imageNamePrefix) {
-    // 也尝试去掉中间点后的部分
-    const shortName = name.split('·')[0];
-    if (AVAILABLE_NPC_IMAGES[shortName]) {
-      imageNamePrefix = shortName;
-    } else if (AVAILABLE_NPC_IMAGES[name]) {
-      imageNamePrefix = name;
-    } else {
-      return undefined;
-    }
+    return undefined;
   }
 
   // 检查 NPC 是否在可用图片列表中
