@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Schema } from '../../schema';
 import {
   Achievement,
@@ -18,6 +18,9 @@ export function useMvuData() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  // 使用 ref 存储上一次的数据 JSON 字符串，用于比较
+  const prevDataJsonRef = useRef<string | null>(null);
+
   const fetchData = useCallback(() => {
     try {
       const message_id = getCurrentMessageId();
@@ -25,12 +28,15 @@ export function useMvuData() {
       const stat_data = _.get(variables, 'stat_data', {});
       const parsed = Schema.parse(stat_data);
 
-      // 调试日志：检查当前扮演字段
-      console.log('[MVU Debug] 当前扮演值:', parsed.主角状态?.基础信息?.当前扮演);
-      console.log('[MVU Debug] 完整主角状态:', parsed.主角状态);
+      // 序列化新数据用于比较
+      const newDataJson = JSON.stringify(parsed);
 
-      setData(parsed);
-      setError(null);
+      // 只有数据真正变化时才更新状态，避免不必要的重新渲染
+      if (prevDataJsonRef.current !== newDataJson) {
+        prevDataJsonRef.current = newDataJson;
+        setData(parsed);
+        setError(null);
+      }
     } catch (e) {
       console.error('解析 MVU 变量失败:', e);
       setError(e instanceof Error ? e : new Error(String(e)));
