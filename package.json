@@ -3,7 +3,11 @@
     "build:dev": "webpack --mode development",
     "build": "webpack --mode production",
     "watch": "webpack --mode development --watch --progress",
+<<<<<<< HEAD
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,scss,html,vue}\"",
+=======
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,scss,html,vue}\" --no-error-on-unmatched-pattern",
+>>>>>>> f0b81694107b46de13c384cb766919135218501f
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "dump": "node dump_schema.ts",
@@ -92,7 +96,10 @@
     "jsonrepair": "^3.13.2",
     "klona": "^2.0.6",
     "lodash": "^4.17.23",
+<<<<<<< HEAD
     "lucide-react": "^0.563.0",
+=======
+>>>>>>> f0b81694107b46de13c384cb766919135218501f
     "pinia": "^3.0.4",
     "pixi.js": "^8.16.0",
     "react": "^19.2.4",
