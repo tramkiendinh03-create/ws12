@@ -109,6 +109,11 @@ const NPC_NAME_MAPPING: Record<string, string> = {
   亚历克西斯: '亚历克西斯',
   伊莎贝拉: '伊莎贝拉',
   玉藻前: '玉藻前',
+  艾瑞雅: '艾瑞雅',
+  '凯特琳·冯': '凯特琳',
+  玛丽娜: '玛丽娜',
+  '维多利亚·奥兰治': '维多利亚',
+  '伊丽莎白·奥兰治': '伊丽莎白',
 };
 
 // 可用的 NPC 图片配置（基于 llmw 文件夹中的实际图片）
@@ -144,6 +149,11 @@ const AVAILABLE_NPC_IMAGES: Record<string, { 原: boolean; 堕落: boolean }> = 
   伊芙琳: { 原: true, 堕落: true },
   伊莎贝拉: { 原: true, 堕落: true },
   玉藻前: { 原: true, 堕落: true },
+  艾瑞雅: { 原: true, 堕落: true },
+  '凯特琳·冯': { 原: true, 堕落: true },
+  玛丽娜: { 原: true, 堕落: true },
+  '维多利亚·奥兰治': { 原: true, 堕落: true },
+  '伊丽莎白·奥兰治': { 原: true, 堕落: true },
 };
 
 // 特殊命名规则的 NPC（堕落版没有连字符）
