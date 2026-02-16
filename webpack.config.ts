@@ -57,13 +57,19 @@ function glob_script_files() {
     )
     .forEach(file => {
       const file_dirname = path.dirname(file);
+      const keep_child_entries =
+        file_dirname.startsWith(`src${path.sep}天罚${path.sep}`) ||
+        file_dirname.startsWith(`示例${path.sep}天罚${path.sep}`);
+
       for (const [index, result] of results.entries()) {
         const result_dirname = path.dirname(result);
         const common = common_path(result_dirname, file_dirname);
-        if (common === result_dirname) {
+
+        if (!keep_child_entries && common === result_dirname) {
           return;
         }
-        if (common === file_dirname) {
+
+        if (!keep_child_entries && common === file_dirname) {
           results.splice(index, 1, file);
           return;
         }
@@ -184,7 +190,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
     experiments: {
       outputModule: true,
     },
-    devtool: argv.mode === 'production' ? 'source-map' : 'eval-source-map',
+    devtool: argv.mode === 'production' ? false : 'source-map',
     watchOptions: {
       ignored: ['**/dist', '**/node_modules'],
     },
@@ -531,11 +537,18 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       }
 
       if (
-        ['vue', 'vue-router', 'pixi.js'].every(key => request !== key) &&
+        ['vue', 'vue-router', 'pixi.js', 'react', 'react-dom', 'react-dom/client', 'scheduler'].every(
+          key => request !== key,
+        ) &&
         ['pixi', 'react', 'vue'].some(key => request.includes(key))
       ) {
         return callback();
       }
+
+      if (['react', 'react-dom', 'react-dom/client', 'scheduler'].includes(request)) {
+        return callback();
+      }
+
       const global = {
         jquery: '$',
         lodash: '_',
