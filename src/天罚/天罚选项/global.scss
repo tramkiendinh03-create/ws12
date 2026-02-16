@@ -1,0 +1,18 @@
+@import '../global.scss';
+
+/* 覆盖父级全局暗色背景，避免在酒馆消息楼层出现额外黑边 */
+html,
+body {
+  background: transparent !important;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
