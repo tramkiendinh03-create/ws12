@@ -1,12 +1,4 @@
-
-import {
-  Clock,
-  Globe,
-  MapPin,
-  Radio,
-  Skull,
-  User
-} from 'lucide-react';
+import { Clock, Globe, MapPin, Radio, Skull, User } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import InquisitorProfile from './components/Dashboard/InquisitorProfile';
 import VillainMonitor from './components/Dashboard/VillainMonitor';
@@ -90,9 +82,7 @@ function isModeEnabled(value: unknown): boolean {
 
 function toGameModes(value: unknown): GameMode[] {
   if (Array.isArray(value)) {
-    const result = value
-      .map(item => MODE_MAP[String(item)])
-      .filter((mode): mode is GameMode => Boolean(mode));
+    const result = value.map(item => MODE_MAP[String(item)]).filter((mode): mode is GameMode => Boolean(mode));
     return result.length > 0 ? result : [GameMode.NORMAL];
   }
 
@@ -122,7 +112,7 @@ function parseWorld(worldRaw: Record<string, unknown>): WorldState {
 function parseInquisitor(raw: Record<string, unknown>): Inquisitor {
   return {
     圣裁官姓名: toString(raw.圣裁官姓名 ?? raw.姓名, INITIAL_INQUISITOR.圣裁官姓名),
-    性别: (toString(raw.性别, INITIAL_INQUISITOR.性别) as Inquisitor['性别']),
+    性别: toString(raw.性别, INITIAL_INQUISITOR.性别) as Inquisitor['性别'],
     等级: toNumber(raw.等级, INITIAL_INQUISITOR.等级),
     经验值: toNumber(raw.经验值, INITIAL_INQUISITOR.经验值),
     善升点: toNumber(raw.善升点, INITIAL_INQUISITOR.善升点),
@@ -221,7 +211,6 @@ const App: React.FC = () => {
 
         const modesRaw = root.模式 ?? root.游戏模式 ?? root.activeGameModes;
         setActiveGameModes(toGameModes(modesRaw));
-
       } catch (error) {
         console.warn('[天罚] 读取楼层变量失败，使用默认状态', error);
       }
@@ -233,26 +222,26 @@ const App: React.FC = () => {
 
     const offUpdated = runtime.tavern_events.MESSAGE_UPDATED
       ? runtime.eventOn(runtime.tavern_events.MESSAGE_UPDATED, () => {
-        syncFromVariables();
-      })
+          syncFromVariables();
+        })
       : undefined;
 
     const offEdited = runtime.tavern_events.MESSAGE_EDITED
       ? runtime.eventOn(runtime.tavern_events.MESSAGE_EDITED, () => {
-        syncFromVariables();
-      })
+          syncFromVariables();
+        })
       : undefined;
 
     const offReceived = runtime.tavern_events.MESSAGE_RECEIVED
       ? runtime.eventOn(runtime.tavern_events.MESSAGE_RECEIVED, () => {
-        syncFromVariables();
-      })
+          syncFromVariables();
+        })
       : undefined;
 
     const offChatChanged = runtime.tavern_events.CHAT_CHANGED
       ? runtime.eventOn(runtime.tavern_events.CHAT_CHANGED, () => {
-        syncFromVariables();
-      })
+          syncFromVariables();
+        })
       : undefined;
 
     return () => {
@@ -288,9 +277,7 @@ const App: React.FC = () => {
       const variables = runtime.getVariables(option) ?? {};
       const container = { ...variables };
       const hasStatData = Boolean(container.stat_data && typeof container.stat_data === 'object');
-      const root = hasStatData
-        ? { ...(container.stat_data as Record<string, unknown>) }
-        : { ...container };
+      const root = hasStatData ? { ...(container.stat_data as Record<string, unknown>) } : { ...container };
 
       mutate(root);
 
@@ -319,8 +306,13 @@ const App: React.FC = () => {
       const hasActiveGameModes = Object.prototype.hasOwnProperty.call(root, 'activeGameModes');
 
       // 只写入一个模式字段，避免产生不必要的重复变量
-      const targetKey: '模式' | '游戏模式' | 'activeGameModes' =
-        has模式 ? '模式' : has游戏模式 ? '游戏模式' : hasActiveGameModes ? 'activeGameModes' : '模式';
+      const targetKey: '模式' | '游戏模式' | 'activeGameModes' = has模式
+        ? '模式'
+        : has游戏模式
+          ? '游戏模式'
+          : hasActiveGameModes
+            ? 'activeGameModes'
+            : '模式';
 
       root[targetKey] = modeMap;
 
@@ -336,7 +328,9 @@ const App: React.FC = () => {
   // Toggle Mode Logic
   const toggleGameMode = (mode: GameMode) => {
     if (mode === GameMode.NORMAL) {
-      const locked = activeGameModes.includes(GameMode.NORMAL) ? activeGameModes : [GameMode.NORMAL, ...activeGameModes];
+      const locked = activeGameModes.includes(GameMode.NORMAL)
+        ? activeGameModes
+        : [GameMode.NORMAL, ...activeGameModes];
       persistGameModes(locked);
       setActiveGameModes(locked);
       setPendingMode(null);
@@ -345,9 +339,7 @@ const App: React.FC = () => {
       return;
     }
 
-    const base = activeGameModes.includes(GameMode.NORMAL)
-      ? activeGameModes
-      : [GameMode.NORMAL, ...activeGameModes];
+    const base = activeGameModes.includes(GameMode.NORMAL) ? activeGameModes : [GameMode.NORMAL, ...activeGameModes];
 
     // 一旦开启后不可关闭
     if (base.includes(mode)) {
@@ -365,9 +357,7 @@ const App: React.FC = () => {
   const confirmEnableMode = () => {
     if (!pendingMode) return;
 
-    const base = activeGameModes.includes(GameMode.NORMAL)
-      ? activeGameModes
-      : [GameMode.NORMAL, ...activeGameModes];
+    const base = activeGameModes.includes(GameMode.NORMAL) ? activeGameModes : [GameMode.NORMAL, ...activeGameModes];
 
     if (base.includes(pendingMode)) {
       setPendingMode(null);
@@ -396,8 +386,13 @@ const App: React.FC = () => {
     const hasInquisitor = Object.prototype.hasOwnProperty.call(root, 'inquisitor');
 
     // 只写入一个角色字段，避免产生不必要的重复变量
-    const targetKey: '圣裁官' | '主角' | 'inquisitor' =
-      has圣裁官 ? '圣裁官' : has主角 ? '主角' : hasInquisitor ? 'inquisitor' : '主角';
+    const targetKey: '圣裁官' | '主角' | 'inquisitor' = has圣裁官
+      ? '圣裁官'
+      : has主角
+        ? '主角'
+        : hasInquisitor
+          ? 'inquisitor'
+          : '主角';
 
     root[targetKey] = nextInquisitor;
 
@@ -526,12 +521,7 @@ const App: React.FC = () => {
           />
         );
       case 'target':
-        return (
-          <VillainMonitor
-            villains={villains}
-            onDeleteVillain={handleDeleteVillain}
-          />
-        );
+        return <VillainMonitor villains={villains} onDeleteVillain={handleDeleteVillain} />;
     }
   };
 
@@ -542,10 +532,8 @@ const App: React.FC = () => {
       <div className="bg-grid-pattern pointer-events-none absolute inset-0 -z-10 opacity-5"></div>
 
       <div className="w-full max-w-5xl space-y-6">
-
         {/* Header Row: Status + Navigation */}
         <div className="flex h-auto flex-col gap-4 md:h-24 md:flex-row">
-
           {/* Global Status Bar (Minimal) */}
           <div className="group relative flex flex-1 items-center justify-between overflow-hidden rounded-2xl border border-white/10 bg-[#1a1b1e] p-5 shadow-lg">
             <div className="bg-tech-blue absolute top-0 left-0 h-full w-1"></div>
@@ -629,16 +617,17 @@ const App: React.FC = () => {
               { id: 'profile', icon: User, label: '圣裁官' },
               { id: 'world', icon: Globe, label: '世界' },
               { id: 'target', icon: Skull, label: '反派' },
-            ].map((item) => (
+            ].map(item => (
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id as TabId)}
                 className={`
                             group relative flex flex-1 flex-col items-center justify-center gap-2 rounded-xl px-6 py-3 transition-all duration-300 md:h-full md:flex-none md:flex-row md:py-0
-                            ${activeTab === item.id
-                    ? 'bg-tech-blue/10 text-tech-blue ring-tech-blue/50 shadow-[0_0_15px_rgba(0,243,255,0.2)] ring-1'
-                    : 'text-gray-500 hover:bg-white/5 hover:text-gray-300'
-                  }
+                            ${
+                              activeTab === item.id
+                                ? 'bg-tech-blue/10 text-tech-blue ring-tech-blue/50 shadow-[0_0_15px_rgba(0,243,255,0.2)] ring-1'
+                                : 'text-gray-500 hover:bg-white/5 hover:text-gray-300'
+                            }
                           `}
               >
                 <item.icon size={20} strokeWidth={activeTab === item.id ? 2.5 : 2} />
@@ -649,9 +638,7 @@ const App: React.FC = () => {
         </div>
 
         {/* Main Content Area */}
-        <div className="animate-in fade-in slide-in-from-bottom-4 w-full duration-500">
-          {renderActiveView()}
-        </div>
+        <div className="animate-in fade-in slide-in-from-bottom-4 w-full duration-500">{renderActiveView()}</div>
       </div>
     </div>
   );

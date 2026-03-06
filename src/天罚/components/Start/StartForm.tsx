@@ -18,43 +18,13 @@ interface StartFormProps {
   onConfirm: (data: StartFormData) => void;
 }
 
-const TALENT_OPTIONS = [
-  '钢铁意志',
-  '战术直觉',
-  '机械亲和',
-  '审判威压',
-  '魅惑抗性',
-  '语言通晓',
-  '神经加速',
-  '危险预知',
-];
+const TALENT_OPTIONS = ['钢铁意志', '战术直觉', '机械亲和', '审判威压', '魅惑抗性', '语言通晓', '神经加速', '危险预知'];
 
-const IDENTITY_OPTIONS = [
-  '联邦审判官',
-  '灰区执法者',
-  '流亡圣职者',
-  '地下情报贩子',
-  '异端净化使',
-  '废土拾荒领队',
-];
+const IDENTITY_OPTIONS = ['联邦审判官', '灰区执法者', '流亡圣职者', '地下情报贩子', '异端净化使', '废土拾荒领队'];
 
-const JOB_OPTIONS = [
-  '圣裁官',
-  '战地医师',
-  '渗透特工',
-  '义体技师',
-  '灵能调查员',
-  '城区巡猎者',
-];
+const JOB_OPTIONS = ['圣裁官', '战地医师', '渗透特工', '义体技师', '灵能调查员', '城区巡猎者'];
 
-const WORLD_OPTIONS = [
-  '霓虹·赛博坦09号',
-  '废都·灰烬环',
-  '圣域·终焉塔',
-  '海雾·深潜港',
-  '冻原·白昼站',
-  '裂隙·无光城',
-];
+const WORLD_OPTIONS = ['霓虹·赛博坦09号', '废都·灰烬环', '圣域·终焉塔', '海雾·深潜港', '冻原·白昼站', '裂隙·无光城'];
 
 function pick<T>(list: T[]): T {
   return list[Math.floor(Math.random() * list.length)];
@@ -75,9 +45,7 @@ const StartForm: React.FC<StartFormProps> = ({ value, onChange, onConfirm }) => 
 
   const toggleTalent = (talent: string) => {
     const has = selectedTalentSet.has(talent);
-    const next = has
-      ? value.初始天赋.filter(t => t !== talent)
-      : [...value.初始天赋, talent].slice(0, 4);
+    const next = has ? value.初始天赋.filter(t => t !== talent) : [...value.初始天赋, talent].slice(0, 4);
     onChange({ ...value, 初始天赋: next });
   };
 
@@ -193,10 +161,11 @@ const StartForm: React.FC<StartFormProps> = ({ value, onChange, onConfirm }) => 
                     key={talent}
                     type="button"
                     onClick={() => toggleTalent(talent)}
-                    className={`rounded-lg border px-2 py-2 text-xs font-bold transition ${active
+                    className={`rounded-lg border px-2 py-2 text-xs font-bold transition ${
+                      active
                         ? 'border-tech-blue/50 bg-tech-blue/15 text-tech-blue'
                         : 'border-white/10 bg-black/40 text-gray-300 hover:border-white/30'
-                      }`}
+                    }`}
                   >
                     {talent}
                   </button>
@@ -235,9 +204,18 @@ const StartForm: React.FC<StartFormProps> = ({ value, onChange, onConfirm }) => 
           <div className="rounded-lg border border-white/10 bg-black/40 p-4">
             <div className="mb-2 text-[10px] font-bold tracking-wider text-gray-500 uppercase">当前预览</div>
             <div className="space-y-1 text-sm">
-              <div><span className="text-gray-500">姓名：</span><span className="text-white">{value.姓名 || '-'}</span></div>
-              <div><span className="text-gray-500">性别：</span><span className="text-white">{value.性别 || '-'}</span></div>
-              <div><span className="text-gray-500">职业：</span><span className="text-white">{value.开局职业 || '-'}</span></div>
+              <div>
+                <span className="text-gray-500">姓名：</span>
+                <span className="text-white">{value.姓名 || '-'}</span>
+              </div>
+              <div>
+                <span className="text-gray-500">性别：</span>
+                <span className="text-white">{value.性别 || '-'}</span>
+              </div>
+              <div>
+                <span className="text-gray-500">职业：</span>
+                <span className="text-white">{value.开局职业 || '-'}</span>
+              </div>
             </div>
           </div>
 

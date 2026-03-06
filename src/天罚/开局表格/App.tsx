@@ -183,7 +183,9 @@ const App: React.FC = () => {
             </label>
 
             <div className="block">
-              <span className="mb-2 block text-xs font-bold tracking-wider text-gray-300 uppercase">模式（可多选）</span>
+              <span className="mb-2 block text-xs font-bold tracking-wider text-gray-300 uppercase">
+                模式（可多选）
+              </span>
               <div className="space-y-2 rounded-lg border border-white/10 bg-black/40 px-3 py-3">
                 {MODE_OPTIONS.map(mode => {
                   const checked = form.模式.includes(mode);
@@ -244,17 +246,20 @@ const App: React.FC = () => {
             <div className="mb-2 text-xs font-bold tracking-wider text-gray-500 uppercase">预览</div>
             <div className="space-y-1">
               <div>
-                <span className="text-gray-500">姓名：</span><span className="text-white">{form.姓名 || '-'}</span>
+                <span className="text-gray-500">姓名：</span>
+                <span className="text-white">{form.姓名 || '-'}</span>
               </div>
               <div>
-                <span className="text-gray-500">性别：</span><span className="text-white">{form.性别 || '-'}</span>
+                <span className="text-gray-500">性别：</span>
+                <span className="text-white">{form.性别 || '-'}</span>
               </div>
               <div>
                 <span className="text-gray-500">模式：</span>
                 <span className="text-white">{form.模式.length ? form.模式.join('、') : '-'}</span>
               </div>
               <div>
-                <span className="text-gray-500">世界：</span><span className="text-white">{form.世界 || '-'}</span>
+                <span className="text-gray-500">世界：</span>
+                <span className="text-white">{form.世界 || '-'}</span>
               </div>
             </div>
           </div>

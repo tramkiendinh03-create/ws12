@@ -1,4 +1,3 @@
-
 import { Database, Flag, Globe, Target, Zap } from 'lucide-react';
 import React from 'react';
 import { WorldState } from '../../types';
@@ -12,7 +11,6 @@ interface WorldStatusProps {
 const WorldStatus: React.FC<WorldStatusProps> = ({ world }) => {
   return (
     <div className="grid h-[480px] grid-cols-1 gap-6 md:grid-cols-2">
-
       {/* Left Column: Planetary Analysis */}
       <MetalContainer title="世界信息" glowColor="blue" className="relative flex h-full flex-col overflow-hidden">
         {/* Background Decor */}
@@ -21,7 +19,6 @@ const WorldStatus: React.FC<WorldStatusProps> = ({ world }) => {
         </div>
 
         <div className="relative z-10 flex flex-1 flex-col justify-center space-y-6">
-
           {/* World Card */}
           <div className="to-tech-blue/5 border-tech-blue/20 group relative rounded-xl border bg-gradient-to-br from-black/60 p-6 shadow-[0_0_20px_rgba(0,243,255,0.05)] transition-colors hover:border-tech-blue/40">
             <div className="absolute top-3 right-3 flex gap-1.5">
@@ -52,9 +49,7 @@ const WorldStatus: React.FC<WorldStatusProps> = ({ world }) => {
                 <div className="text-[10px] font-bold tracking-wider text-gray-400 uppercase transition-colors group-hover:text-yellow-500">
                   已净化世界数
                 </div>
-                <div className="text-xs text-gray-500">
-                  PURIFIED WORLDS
-                </div>
+                <div className="text-xs text-gray-500">PURIFIED WORLDS</div>
               </div>
             </div>
             <div className="font-display text-4xl font-bold text-yellow-500 drop-shadow-[0_0_5px_rgba(234,179,8,0.3)]">
@@ -72,7 +67,9 @@ const WorldStatus: React.FC<WorldStatusProps> = ({ world }) => {
                 </span>
                 <span className="mt-0.5 text-[10px] text-gray-500">正在覆写世界法则代码...</span>
               </div>
-              <span className="font-display text-tech-blue text-2xl font-bold drop-shadow-[0_0_5px_rgba(0,243,255,0.5)]">{world.当前世界净化度}%</span>
+              <span className="font-display text-tech-blue text-2xl font-bold drop-shadow-[0_0_5px_rgba(0,243,255,0.5)]">
+                {world.当前世界净化度}%
+              </span>
             </div>
             <ProgressBar
               value={world.当前世界净化度}
@@ -87,7 +84,6 @@ const WorldStatus: React.FC<WorldStatusProps> = ({ world }) => {
       {/* Right Column: Tactical Briefing */}
       <MetalContainer title="任务信息" glowColor="red" className="relative flex h-full flex-col">
         <div className="flex h-full flex-col">
-
           {/* Mission Main Block - Now takes full height */}
           <div className="group relative flex flex-1 flex-col">
             <div className="bg-neon-alert/5 border-neon-alert/20 absolute inset-0 rounded-xl border transition-colors duration-500 group-hover:bg-neon-alert/10"></div>
@@ -110,20 +106,20 @@ const WorldStatus: React.FC<WorldStatusProps> = ({ world }) => {
               </div>
 
               <div className="custom-scrollbar flex-1 overflow-y-auto">
-                <p className="font-sans text-base leading-loose font-medium text-gray-200">
-                  {world.任务}
-                </p>
-
+                <p className="font-sans text-base leading-loose font-medium text-gray-200">{world.任务}</p>
               </div>
             </div>
           </div>
 
           {/* Status Footer */}
           <div className="flex items-center justify-between px-1 pt-3 text-[10px] tracking-widest text-gray-500 uppercase">
-            <span>任务状态: <span className="text-gray-300">进行中</span></span>
-            <span className="flex items-center gap-1.5"><div className="h-2 w-2 animate-pulse rounded-full bg-red-500"></div> 录制中 (REC)</span>
+            <span>
+              任务状态: <span className="text-gray-300">进行中</span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <div className="h-2 w-2 animate-pulse rounded-full bg-red-500"></div> 录制中 (REC)
+            </span>
           </div>
-
         </div>
       </MetalContainer>
     </div>
