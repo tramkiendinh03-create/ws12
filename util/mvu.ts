@@ -19,7 +19,13 @@ export function defineMvuDataStore<T extends z.ZodObject>(
       .map(entry => entry[1])
       .join('.')}`,
     errorCatched(() => {
+<<<<<<< HEAD
       const data = ref(schema.parse(_.get(getVariables(variable_option), 'stat_data', {}))) as Ref<z.infer<T>>;
+=======
+      const data = ref(
+        schema.parse(_.get(getVariables(variable_option), 'stat_data', {}), { reportInput: true }),
+      ) as Ref<z.infer<T>>;
+>>>>>>> 5df9c1cb4c82b29727ec6b2114f822fb829e2164
       if (additional_setup) {
         additional_setup(data);
       }
@@ -34,10 +40,17 @@ export function defineMvuDataStore<T extends z.ZodObject>(
           ignoreUpdates(() => {
             data.value = result.data;
           });
+<<<<<<< HEAD
         }
         if (!_.isEqual(stat_data, result.data)) {
           updateVariablesWith(variables => _.set(variables, 'stat_data', result.data), variable_option);
         }
+=======
+          if (!_.isEqual(stat_data, result.data)) {
+            updateVariablesWith(variables => _.set(variables, 'stat_data', result.data), variable_option);
+          }
+        }
+>>>>>>> 5df9c1cb4c82b29727ec6b2114f822fb829e2164
       }, 2000);
 
       const { ignoreUpdates } = watchIgnorable(
