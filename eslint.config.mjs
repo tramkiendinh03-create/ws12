@@ -19,7 +19,11 @@ export default [
   ...vue.configs['flat/recommended'],
   pinia.configs['recommended-flat'],
   {
+<<<<<<< HEAD
     files: ['src/**/*.{vue,js,ts,jsx,tsx}'],
+=======
+    files: ['src/**/*.{html,vue,js,ts}'],
+>>>>>>> f759a3e3f10c9abb6086ecf76222f35268e80cf1
     plugins: {
       'better-tailwindcss': eslintPluginBetterTailwindcss,
     },
@@ -37,6 +41,7 @@ export default [
     },
   },
   {
+<<<<<<< HEAD
     files: ['**/*.{ts,tsx,js,jsx}'],
     languageOptions: {
       parser: tsParser,
@@ -46,6 +51,14 @@ export default [
         ecmaFeatures: {
           jsx: true,
         },
+=======
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        parser: tsParser,
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+>>>>>>> f759a3e3f10c9abb6086ecf76222f35268e80cf1
       },
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -73,11 +86,16 @@ export default [
       'pinia/no-duplicate-store-ids': 'off',
       'pinia/require-setup-store-properties-export': 'off',
       'prefer-const': 'warn',
+<<<<<<< HEAD
+=======
+      'vue/multi-word-component-names': 'off',
+>>>>>>> f759a3e3f10c9abb6086ecf76222f35268e80cf1
       yoda: 'error',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
     },
   },
+<<<<<<< HEAD
   {
     files: ['**/*.vue'],
     languageOptions: {
@@ -102,4 +120,8 @@ export default [
   },
   eslintConfigPrettier,
   globalIgnores(['dist/**', 'node_modules/**', 'eslint.config.mjs', 'postcss.config.js', 'webpack.config.ts', '**/*.html']),
+=======
+  eslintConfigPrettier,
+  globalIgnores(['dist/**', 'node_modules/**', 'eslint.config.mjs', 'postcss.config.js', 'webpack.config.ts']),
+>>>>>>> f759a3e3f10c9abb6086ecf76222f35268e80cf1
 ];

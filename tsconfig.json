@@ -4,12 +4,19 @@
       "jquery",
       "jqueryui",
       "lodash",
+<<<<<<< HEAD
       "react",
       "react-dom",
       "toastr",
       "type-fest",
       "yaml",
       "zod"
+=======
+      "toastr",
+      "type-fest",
+      "yaml",
+      "zod",
+>>>>>>> f759a3e3f10c9abb6086ecf76222f35268e80cf1
     ],
     "target": "ESNext",
     "module": "ESNext",
