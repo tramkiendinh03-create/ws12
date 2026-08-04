@@ -4,6 +4,7 @@
       "jquery",
       "jqueryui",
       "lodash",
+<<<<<<< HEAD
       "react",
       "react-dom",
       "toastr",
@@ -15,6 +16,17 @@
     "module": "ESNext",
     "outDir": "dist",
     "baseUrl": ".",
+=======
+      "toastr",
+      "type-fest",
+      "yaml",
+      "zod",
+    ],
+    "target": "ESNext",
+    "module": "ESNext",
+    "rootDir": ".",
+    "outDir": "dist",
+>>>>>>> ffcef6e22b372e2f3dcc1048bf50073234505d74
     "paths": {
       "@util/*": [
         "./util/*"
