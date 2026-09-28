@@ -19,7 +19,11 @@ export default [
   ...vue.configs['flat/recommended'],
   pinia.configs['recommended-flat'],
   {
+<<<<<<< HEAD
     files: ['src/**/*.{vue,js,ts,jsx,tsx}'],
+=======
+    files: ['src/**/*.{html,vue,js,ts}'],
+>>>>>>> 7f92d0b6cabecacd6ca52f5c77d6f18fa6a3b4b9
     plugins: {
       'better-tailwindcss': eslintPluginBetterTailwindcss,
     },
@@ -27,7 +31,11 @@ export default [
       ...eslintPluginBetterTailwindcss.configs['recommended-warn'].rules,
       ...eslintPluginBetterTailwindcss.configs['recommended-error'].rules,
       'better-tailwindcss/enforce-consistent-line-wrapping': ['off', { preferSingleLine: true, printWidth: 120 }],
+<<<<<<< HEAD
       'better-tailwindcss/no-unregistered-classes': ['off', { ignore: ['fa-*'] }],
+=======
+      'better-tailwindcss/no-unknown-classes': ['off', { ignore: ['fa-*'] }],
+>>>>>>> 7f92d0b6cabecacd6ca52f5c77d6f18fa6a3b4b9
     },
     settings: {
       'better-tailwindcss': {
@@ -37,6 +45,7 @@ export default [
     },
   },
   {
+<<<<<<< HEAD
     files: ['**/*.{ts,tsx,js,jsx}'],
     languageOptions: {
       parser: tsParser,
@@ -46,6 +55,14 @@ export default [
         ecmaFeatures: {
           jsx: true,
         },
+=======
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        parser: tsParser,
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+>>>>>>> 7f92d0b6cabecacd6ca52f5c77d6f18fa6a3b4b9
       },
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -73,11 +90,16 @@ export default [
       'pinia/no-duplicate-store-ids': 'off',
       'pinia/require-setup-store-properties-export': 'off',
       'prefer-const': 'warn',
+<<<<<<< HEAD
+=======
+      'vue/multi-word-component-names': 'off',
+>>>>>>> 7f92d0b6cabecacd6ca52f5c77d6f18fa6a3b4b9
       yoda: 'error',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
     },
   },
+<<<<<<< HEAD
   {
     files: ['**/*.vue'],
     languageOptions: {
@@ -102,4 +124,8 @@ export default [
   },
   eslintConfigPrettier,
   globalIgnores(['dist/**', 'node_modules/**', 'eslint.config.mjs', 'postcss.config.js', 'webpack.config.ts', '**/*.html']),
+=======
+  eslintConfigPrettier,
+  globalIgnores(['dist/**', 'node_modules/**', 'eslint.config.mjs', 'postcss.config.js', 'webpack.config.ts']),
+>>>>>>> 7f92d0b6cabecacd6ca52f5c77d6f18fa6a3b4b9
 ];
